@@ -70,7 +70,7 @@ Timed out retrying after 4000ms: Expected to find element: [data-testid=note-nam
 ```
 - Our objective now is to make this test go green (pass) in as few steps as possible.  The goal is not to build a perfectly designed application but rather to make this go green and then [refactor](https://en.wikipedia.org/wiki/Code_refactoring) the architecture through small incremental steps.
 
-[Code for this section]()
+[Code for this section](https://github.com/pairing4good/tdd-amplify-react-/commit/998cf7a3da2af3b30aed14ccea18e6d546e85e61)
 
 ### Green - Acceptance Test
 
