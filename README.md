@@ -1,70 +1,76 @@
-# Getting Started with Create React App
+# TDD AWS Amplify React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+In this tutorial we will [test drive](https://en.wikipedia.org/wiki/Test-driven_development) a react app. We will use [AWS Amplify](https://aws.amazon.com/amplify) to set up authentication and the backend API.
 
-## Available Scripts
+## Approach
+Test driving an application often starts at the bottom of the [testing pyramid](https://martinfowler.com/bliki/TestPyramid.html) in [unit tests](https://en.wikipedia.org/wiki/Unit_testing).  Unit tests focus on testing small units of code in isolation.  However, this tutorial will start at the top of the pyramid with user interface (UI) testing.  This approach is often called [Acceptance Test Driven Development](https://en.wikipedia.org/wiki/Acceptance_test%E2%80%93driven_development) (ATDD).
 
-In the project directory, you can run:
+There are a few benefits of starting at the top of the testing pyramid:
+1. Quick Feedback: Demonstrate a working system to the customer faster
+1. Customer Focus: Low level code clearly ties to high level customer value
+1. System Focus: The architecture evolves and expands on green.
 
-### `npm start`
+## First Test
+### Why: User Story
+```
+As a team member
+I want to capture a note
+So that I can refer back to it later
+```
+### What: User Accceptance Criteria
+```
+Given that a note exists
+When the user enters a new note title and description
+Then a list of two notes are displayed
+```
+### Prerequisites
+- [Visual Studio Code](https://code.visualstudio.com/)
+- [Node.js](Node.jshttps://nodejs.org)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Red - Acceptance Test
+The user story and acceptance criteria above describe a desired customer outcome.  The user acceptance test will link this narrative with a high level how.  For this tutorial our first application will be a [web application](https://en.wikipedia.org/wiki/Web_application) in [React](https://reactjs.org).  The testing framework we will use to test this will be [Cypress](https://www.cypress.io)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- In a terminal window run `npx create-react-app tdd-amplify-react` to create a new react app
+- `cd` into `tdd-amplify-react`
+- Run `npm start` to start the new react app
+- In a new terminal window run `npm install cypress --save-dev` to install Cypress via [npm](https://www.npmjs.com):
+- Configure the base url in the `cypress.json` file
+```js
+{
+    "baseUrl": "http://localhost:3000"
+}
+```
+- Run `npx cypress open` to Open Cypress
+- Create a new test called `note.spec.js` under the `cypress\integration\` directory in your project
+- Write your first test with intent revealing names.
+```js
+beforeEach(() => {
+    cy.visit('/');
+  });
 
-### `npm test`
+describe('Note Capture', () => {
+    it('should create a note when name and description provided', () => {
+        expect(true).to.equal(true)
+    });
+});
+```
+- Click on the `note.spec.js` test in the Cypress test browser.  The test should run and should pass (green).
+- Replace `expect(true).to.equal(true)` with the following
+```js
+cy.get('[data-testid=note-name-field]').type('test note');
+cy.get('[data-testid=note-description-field]').type('test note description');
+cy.get('[data-testid=note-form-submit]').click();
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+cy.get('[data-testid=test-name-0]').should('have.text', 'test note');
+cy.get('[data-testid=test-description-0]').should('have.text', 'test note description');
+```
+- These commands are looking for elements on a webpage that contains a `data-testid` attribute with the value that follows the `=`.  We now have a failing acceptance test.
+```
+Timed out retrying after 4000ms: Expected to find element: [data-testid=note-name-field], but never found it.
+```
+- Our objective now is to make this test go green (pass) in as few steps as possible.  The goal is not to build a perfectly designed application but rather to make this go green and then [refactor](https://en.wikipedia.org/wiki/Code_refactoring) the architecture through small incremental steps.
 
-### `npm run build`
+[Code for this section]()
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Green - Acceptance Test
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
