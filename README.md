@@ -25,7 +25,7 @@ Then a list of two notes are displayed
 ```
 ### Prerequisites
 - [Visual Studio Code](https://code.visualstudio.com/)
-- [Node.js](Node.jshttps://nodejs.org)
+- [Node.js](https://nodejs.org)
 
 ### Red - Acceptance Test
 The user story and acceptance criteria above describe a desired customer outcome.  The user acceptance test will link this narrative with a high level how.  For this tutorial our first application will be a [web application](https://en.wikipedia.org/wiki/Web_application) in [React](https://reactjs.org).  The testing framework we will use to test this will be [Cypress](https://www.cypress.io)
@@ -73,4 +73,82 @@ Timed out retrying after 4000ms: Expected to find element: [data-testid=note-nam
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react-/commit/998cf7a3da2af3b30aed14ccea18e6d546e85e61)
 
 ### Green - Acceptance Test
+Before we proceed let's add a script to run cypress into the `package.json` file in the `scripts` section.
+```js
+"scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "cypress:open": "cypress open"
+  }
+```
+- Now you can run `npm run cypress:open` to open cypress
 
+The first step to making this failing test go green is adding an element with one of the `data-testid`'s to the `src/App.js` file.
+```js
+import './App.css';
+
+function App() {
+  return (
+    <div className="App">
+      <input data-testid="note-name-field"/>
+    </div>
+  );
+}
+
+export default App;
+```
+- Now the Cypress test fails on the second field
+```
+Timed out retrying after 4000ms: Expected to find element: [data-testid=note-description-field], but never found it.
+```
+- Add the next `input` field and rerun the test
+- Now the Cypress test fails on the submit button
+```
+Timed out retrying after 4000ms: Expected to find element: [data-testid=note-form-submit], but never found it.
+```
+- Add the `button` element with the expected `data-testid`
+```js
+<input data-testid="note-name-field"/>
+<input data-testid="note-description-field"/>
+<button data-testid="note-form-submit"/>
+```
+- Now the Cypress test fails on the missing list of created notes
+```
+Timed out retrying after 4000ms: Expected to find element: [data-testid=test-name-0], but never found it.
+```
+In test driven development we do the simplest thing possible to make a test go green.  Once it is green then and only then do we go back and refactor it.  In this case, the simplest thing that we can do is hard-code the expected values on the screen.
+```js
+<input data-testid="note-name-field"/>
+<input data-testid="note-description-field"/>
+<button data-testid="note-form-submit"/>
+<p data-testid="test-name-0">test note</p>
+```
+- Now the Cypresss test fails on the note description
+```
+Timed out retrying after 4000ms: Expected to find element: [data-testid=test-description-0], but never found it.
+```
+- Add the final element for `test-description-0` 
+```js
+import './App.css';
+
+function App() {
+  return (
+    <div className="App">
+      <input data-testid="note-name-field"/>
+      <input data-testid="note-description-field"/>
+      <button data-testid="note-form-submit"/>
+      <p data-testid="test-name-0">test note</p>
+      <p data-testid="test-description-0">test note description</p>
+    </div>
+  );
+}
+
+export default App;
+```
+- While this is far from a useful application, this application can be:
+    1. refactored on green
+    1. used to get feedback from the customer
+
+[Code for this section]()
