@@ -71,7 +71,7 @@ Timed out retrying after 4000ms: Expected to find element: [data-testid=note-nam
 ```
 - Our objective now is to make this test go green (pass) in as few steps as possible.  The goal is not to build a perfectly designed application but rather to make this go green and then [refactor](https://en.wikipedia.org/wiki/Code_refactoring) the architecture through small incremental steps.
 
-[Code for this section](https://github.com/pairing4good/tdd-amplify-react-/commit/998cf7a3da2af3b30aed14ccea18e6d546e85e61)
+[Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/998cf7a3da2af3b30aed14ccea18e6d546e85e61)
 
 ### Failing Test
 When you ran `npx create-react-app tdd-amplify-react` it created the react app and added a test that renders the `App` [component](https://reactjs.org/docs/thinking-in-react.html#step-1-break-the-ui-into-a-component-hierarchy) and verifies that it has a "learn react" link.  This test is lower in the testing pyramid because it doesn't start up the web application.  Instead it uses the [React Testing Library](https://testing-library.com) to render the component hierarchy without starting the web application on http://localhost:3000.  I would normally never encourage someone to delete a test but since we didn't write this test and we are starting at the top of the testing pyramid, let's just delete `App.test.js` for now.
@@ -155,7 +155,7 @@ export default App;
     1. refactored on green
     1. used to get feedback from the customer
 
-[Code for this section](https://github.com/pairing4good/tdd-amplify-react-/commit/62108fdcb9f7a1a1f5d76b005f05460a149a6535)
+[Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/62108fdcb9f7a1a1f5d76b005f05460a149a6535)
 
 ### Refactor - Acceptance Test
 > Refactoring is a disciplined technique for restructuring an existing body of code, altering its internal structure without changing its external behavior. - Martin Fowler
@@ -221,4 +221,4 @@ export default App;
 
 Congratulations, you've successfully made an internal structural change "without changing its external behavior" (Refactoring).
 
-[Code for this section](https://github.com/pairing4good/tdd-amplify-react-/commit/e6e28ce004ba0b29e2b0b7bd13adcc67965c1cfa#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5)
+[Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/e6e28ce004ba0b29e2b0b7bd13adcc67965c1cfa#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5)
