@@ -266,4 +266,4 @@ Received:
 - The test automatically reruns once the change is saved through jest's [watch](https://jestjs.io/docs/cli) mode.
 - **Be sure to always commit on green**.  We value working code.  `Green Code = Working Code`
 
-[Code for this section]()
+[Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/9fb7f63f4982fa22dc383595e4ac50ad41d02904)
