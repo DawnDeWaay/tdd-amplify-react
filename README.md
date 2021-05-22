@@ -286,3 +286,21 @@ test('should display the name placeholder', () => {
 - Commit on Green.  And always be looking for ways to refactor your code.  Small improvements over time are easier to make than large changes when your code is a mess.
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/b8c8a84a9b70ce70cc2317e09adc15e2f03b8345)
+
+### Description Input Test
+- Test drive the label for the description input.
+```js
+test('should display the description placeholder', () => {
+    render(<NoteForm />)
+    const input = screen.getByTestId('note-description-field');
+
+    expect(input).toHaveAttribute('placeholder', 'Note Description');
+});
+```
+- Make this red test go green
+```js
+<input data-testid="note-description-field" placeholder="Note Description"/>
+```
+- Commit on Green. 
+
+[Code for this section]()

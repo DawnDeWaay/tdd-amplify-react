@@ -14,3 +14,10 @@ test('should display the name placeholder', () => {
 
     expect(input).toHaveAttribute('placeholder', 'Note Name');
 });
+
+test('should display the description placeholder', () => {
+    render(<NoteForm />)
+    const input = screen.getByTestId('note-description-field');
+
+    expect(input).toHaveAttribute('placeholder', 'Note Description');
+});
