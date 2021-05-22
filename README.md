@@ -232,6 +232,7 @@ Before we show this new form to our customer we need to test drive:
 
 - First create a `test` directory in the `src` directory
 - Create a file called `NoteForm.test.js` in the new `test` directory
+### Button Test
 - In this new test file add a test that will drive the button name
 ```js
 test('should display a create note button', () => {
@@ -267,3 +268,21 @@ Received:
 - **Be sure to always commit on green**.  We value working code.  `Green Code = Working Code`
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/9fb7f63f4982fa22dc383595e4ac50ad41d02904)
+
+### Name Input Test
+- Test drive the label for the name input.
+```js
+test('should display the name placeholder', () => {
+    render(<NoteForm />)
+    const input = screen.getByTestId('note-name-field');
+
+    expect(input).toHaveAttribute('placeholder', 'Note Name');
+});
+```
+- Make this red test go green
+```js
+<input data-testid="note-name-field" placeholder="Note Name"/>
+```
+- Commit on Green.  And always be looking for ways to refactor your code.  Small improvements over time are easier to make than large changes when your code is a mess.
+
+[Code for this section]()

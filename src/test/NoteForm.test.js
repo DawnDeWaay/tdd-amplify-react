@@ -7,3 +7,10 @@ test('should display a create note button', () => {
   
     expect(button).toHaveTextContent('Create Note')
 });
+
+test('should display the name placeholder', () => {
+    render(<NoteForm />)
+    const input = screen.getByTestId('note-name-field');
+
+    expect(input).toHaveAttribute('placeholder', 'Note Name');
+});
