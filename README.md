@@ -222,3 +222,48 @@ export default App;
 Congratulations, you've successfully made an internal structural change "without changing its external behavior" (Refactoring).
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/e6e28ce004ba0b29e2b0b7bd13adcc67965c1cfa#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5)
+
+## NoteForm Test
+Now that we have a high-level Cypress test in place, let's move down the testing pyramid into a component test.  This test will use the React Testing Library's [render](https://testing-library.com/docs/react-testing-library/cheatsheet/) function to render the `NoteForm` component and assert it's contents.
+
+Before we show this new form to our customer we need to test drive:
+- the button's name
+- helpful input descriptions
+
+- First create a `test` directory in the `src` directory
+- Create a file called `NoteForm.test.js` in the new `test` directory
+- In this new test file add a test that will drive the button name
+```js
+test('should display a create note button', () => {
+
+});
+```
+- The test name should be conversational and intent revealing.  It should avoid technical words like "render", "component", and the like.  We want a new team member to be able to read this test and understand the customer value.  The body of the test will provide the technical HOW but the test name should point to the customer's WHY and WHAT.
+- Now we will add a test that renders the component and asserts that the button is labeled "Create Note".  For more information on the React Testing Library visit https://testing-library.com/docs
+```js
+import { render, screen } from '@testing-library/react';
+import NoteForm from "../NoteForm";
+
+test('should display a create note button', () => {
+    render(<NoteForm />)
+    const button = screen.getByTestId('note-form-submit')
+  
+    expect(button).toHaveTextContent('Create Note')
+});
+```
+- Run `npm run test` and one test will fail
+```
+Expected element to have text content:
+  Create Note
+Received:
+
+```
+
+- In order to make this pass add the expected text content to the button
+```js
+<button data-testid="note-form-submit">Create Note</button>
+```
+- The test automatically reruns once the change is saved through jest's [watch](https://jestjs.io/docs/cli) mode.
+- **Be sure to always commit on green**.  We value working code.  `Green Code = Working Code`
+
+[Code for this section]()
