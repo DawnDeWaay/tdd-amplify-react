@@ -304,3 +304,22 @@ test('should display the description placeholder', () => {
 - Commit on Green. 
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/0d1712aaf51b52ea20c6c14e5462034dd54a1aa5)
+
+### Refactor
+Every test starts with `render(<NoteForm />)`.  Let's extract this duplicated set up code and place it in the test setup.
+```js
+beforeEach(() => {
+    render(<NoteForm />)
+});
+
+test('should display a create note button', () => {
+    const button = screen.getByTestId('note-form-submit')
+  
+    expect(button).toHaveTextContent('Create Note')
+});
+```
+- We added a [beforeEach](https://reactjs.org/docs/testing-recipes.html#setup--teardown) set up function.
+- Green!
+- Commit
+
+[Code for this section]()
