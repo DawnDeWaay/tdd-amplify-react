@@ -1,5 +1,6 @@
 # TDD AWS Amplify React App
 
+
 In this tutorial we will [test drive](https://en.wikipedia.org/wiki/Test-driven_development) a react app. We will use [AWS Amplify](https://aws.amazon.com/amplify) to set up authentication and the backend API.
 
 ## Approach
@@ -71,6 +72,9 @@ Timed out retrying after 4000ms: Expected to find element: [data-testid=note-nam
 - Our objective now is to make this test go green (pass) in as few steps as possible.  The goal is not to build a perfectly designed application but rather to make this go green and then [refactor](https://en.wikipedia.org/wiki/Code_refactoring) the architecture through small incremental steps.
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react-/commit/998cf7a3da2af3b30aed14ccea18e6d546e85e61)
+
+### Failing Test
+When you ran `npx create-react-app tdd-amplify-react` it created the react app and added a test that renders the `App` [component](https://reactjs.org/docs/thinking-in-react.html#step-1-break-the-ui-into-a-component-hierarchy) and verifies that it has a "learn react" link.  This test is lower in the testing pyramid because it doesn't start up the web application.  Instead it uses the [React Testing Library](https://testing-library.com) to render the component hierarchy without starting the web application on http://localhost:3000.  I would normally never encourage someone to delete a test but since we didn't write this test and we are starting at the top of the testing pyramid, let's just delete `App.test.js` for now.
 
 ### Green - Acceptance Test
 Before we proceed let's add a script to run cypress into the `package.json` file in the `scripts` section.
@@ -152,3 +156,69 @@ export default App;
     1. used to get feedback from the customer
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react-/commit/62108fdcb9f7a1a1f5d76b005f05460a149a6535)
+
+### Refactor - Acceptance Test
+> Refactoring is a disciplined technique for restructuring an existing body of code, altering its internal structure without changing its external behavior. - Martin Fowler
+
+The key to refactoring is to not change its "external behavior".  In other words, after every change we make the test must remain green.
+
+When I look at the existing application a few things pop out.
+- The button needs a name
+- The inputs need descriptions
+
+We could just make these changes and this high-level test would not break.  But these changes have external impact on how the customer understands and uses this application.  Assuming these changes are needed then we must drive them through tests.  One "internal structure" change that could help is pulling this form out into a [react component](https://reactjs.org/docs/thinking-in-react.html#step-1-break-the-ui-into-a-component-hierarchy) so that we can drive these changes independently.  Eventually `App.js` will have several components:
+```js
+<div className="App">
+  <Header />
+  <NoteForm />
+  <NoteList />
+  <Footer />
+</div>
+```
+So let's pull out a `NoteForm` component.
+- Create a new file called `NoteForm.js` in the `src` directory
+```js
+function NoteForm(props) {
+    return (
+        <div>
+            //your form goes here
+        </div>
+    );
+}
+  
+export default NoteForm;
+```
+- This is a [React functional component](https://reactjs.org/docs/components-and-props.html#function-and-class-components)
+- The `export default` is the way to [export](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export) only one object in [ES6](https://en.wikipedia.org/wiki/ECMAScript)
+
+- Copy the form from `App.js` and paste it into the `div` in `NoteForm.js`
+```js
+        <div>
+            <input data-testid="note-name-field"/>
+            <input data-testid="note-description-field"/>
+            <button data-testid="note-form-submit"/>
+            <p data-testid="test-name-0">test note</p>
+            <p data-testid="test-description-0">test note description</p>      
+        </div>
+```
+
+- Replace the form contents in `App.js` with `<NoteForm />` and add an import for the `NoteForm`
+```js
+import './App.css';
+import NoteForm from './NoteForm';
+
+function App() {
+  return (
+    <div className="App">
+      <NoteForm />
+    </div>
+  );
+}
+
+export default App;
+```
+- Rerun you Cypress test and it is green
+
+Congratulations, you've successfully made an internal structural change "without changing its external behavior" (Refactoring).
+
+[Code for this section]()
