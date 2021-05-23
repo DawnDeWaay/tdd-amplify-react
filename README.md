@@ -266,7 +266,7 @@ export default App;
 
 Congratulations, you've successfully made an internal structural change "without changing its external behavior" (Refactoring).
 
-[Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/e6e28ce004ba0b29e2b0b7bd13adcc67965c1cfa#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5)
+[Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/e6e28ce004ba0b29e2b0b7bd13adcc67965c1cfa)
 
 ## NoteForm Test
 
