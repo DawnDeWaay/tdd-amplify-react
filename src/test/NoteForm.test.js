@@ -2,7 +2,7 @@ import { render, screen, getByTestId } from '@testing-library/react';
 import NoteForm from "../NoteForm";
 
 beforeEach(() => {
-    render(<NoteForm />)
+    render(<NoteForm notes={[]}/>)
 });
 
 test('should display a create note button', () => {
