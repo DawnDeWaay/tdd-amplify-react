@@ -4,7 +4,7 @@ function NoteList(props) {
     <div>
       {
           props.notes.map((note, index) => (
-              <div>
+              <div key={'note-' + index}>
                   <p data-testid={"test-name-" + index}>{note.name}</p>
                   <p data-testid={"test-description-" + index}>{note.description}</p>  
               </div>
