@@ -1003,3 +1003,49 @@ function createNote() {
 - Commit
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/22b3132d0c71117111d82afc6f30f41d5ce93c00)
+
+## Demo Your Application To Your Customer
+Be sure to start up your application and walk through it with your customers.  When I was doing this I noticed that the form is not resetting after a note is created.  This is very annoying.  In order to test drive this behavior I will add two additional assertions to the end of the UI test to verify that the form is reset.
+```js
+describe('Note Capture', () => {
+    it('should create a note when name and description provided', () => {
+        cy.get('[data-testid=test-name-0]').should('not.exist');
+        cy.get('[data-testid=test-description-0]').should('not.exist');
+        
+        cy.get('[data-testid=note-name-field]').type('test note');
+        cy.get('[data-testid=note-description-field]').type('test note description');
+        cy.get('[data-testid=note-form-submit]').click();
+
+        cy.get('[data-testid=note-name-field]').should('have.value', '');
+        cy.get('[data-testid=note-description-field]').should('have.value', '');
+
+        cy.get('[data-testid=test-name-0]').should('have.text', 'test note');
+        cy.get('[data-testid=test-description-0]').should('have.text', 'test note description');
+    });
+});
+```
+- This test now fails with
+```
+get [data-testid=note-name-field]
+assert expected <input> to have value '', but the value was test note
+```
+- To make this pass we need to connect the name and description fields to the form data in `NoteForm.js`
+```js
+<input data-testid="note-name-field" 
+    onChange={e => props.setFormDataCallback({ 
+        ...props.formData, 
+        'name': e.target.value}
+    )}
+    value={props.formData.name}
+    placeholder="Note Name"/>
+<input data-testid="note-description-field" 
+    onChange={e => props.setFormDataCallback({ 
+        ...props.formData, 
+        'description': e.target.value}
+    )}
+    value={props.formData.description}
+    placeholder="Note Description"/>
+```
+- Green! Commit!
+
+[Code for this section]()
