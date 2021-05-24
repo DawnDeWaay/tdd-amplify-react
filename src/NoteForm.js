@@ -16,16 +16,7 @@ function NoteForm(props) {
             <button data-testid="note-form-submit"
                 onClick={() => props.setNotesCallback([ ...props.notes, props.formData ])}>
                 Create Note
-            </button>
-
-            {
-                props.notes.map((note, index) => (
-                    <div>
-                        <p data-testid={"test-name-" + index}>{note.name}</p>
-                        <p data-testid={"test-description-" + index}>{note.description}</p>  
-                    </div>
-                ))
-            }  
+            </button> 
         </div> 
     );
 }

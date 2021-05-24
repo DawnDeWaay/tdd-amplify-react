@@ -1,6 +1,7 @@
 import './App.css';
 import NoteForm from './NoteForm';
 import React, { useState } from 'react';
+import NoteList from './NoteList';
 
 function App() {
   const [notes, setNotes] = useState([]);
@@ -12,6 +13,7 @@ function App() {
         formData={formData} 
         setFormDataCallback={setFormData} 
         setNotesCallback={setNotes}/>
+      <NoteList notes={notes}/>
     </div>
   );
 }
