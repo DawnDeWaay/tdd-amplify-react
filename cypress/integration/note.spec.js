@@ -2,6 +2,10 @@ beforeEach(() => {
     cy.visit('/');
   });
 
+it('should have header', () => {
+    cy.get('h1').should('have.text', 'My Notes App')
+})
+
 describe('Note Capture', () => {
     it('should create a note when name and description provided', () => {
         cy.get('[data-testid=test-name-0]').should('not.exist');

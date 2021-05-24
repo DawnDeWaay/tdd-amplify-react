@@ -803,3 +803,44 @@ export default Header;
 - Commit your code!
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/4f4defe7251bc2274b1a348a3c68c3efdb640ceb)
+
+### Hook Up Header
+Even though the component is test driven and ready to be used, we have not used it yet outside the test.  Let's drive this change through the Cypress test.
+
+- Add a test that asserts the header
+```js
+it('should have header', () => {
+    cy.get('h1').should('have.text', 'My Notes App')
+})
+```
+- It fails
+- Add the component to the `App` component
+```js
+return (
+  <div className="App">
+    <Header />
+    <NoteForm notes={notes}  
+      formData={formData} 
+      setFormDataCallback={setFormData} 
+      setNotesCallback={setNotes}/>
+    <NoteList notes={notes}/>
+  </div>
+);
+```
+- It's Green!
+- Commit!
+
+You will notice that in the TDD testing cycle we commit very small bits of working code.  We commit all the time.  While this may seem like overkill, here are some benefits.
+1. Our commit messages tell a focused, step-by-step story that explains why we made each change.
+1. We are preserving working code.  ["Working software is the primary measure of progress."](https://agilemanifesto.org/principles.html)
+1. We can [revert](https://en.wikipedia.org/wiki/Reversion_(software_development)) our changes back to a know working state without loosing very many changes.
+
+This last benefit is worth expounding upon.  The TDD testing cycle keeps us laser focused on writing small pieces of working functionality.  In fact the [3 Laws of TDD](http://blog.cleancoder.com/uncle-bob/2014/12/17/TheCyclesOfTDD.html) prevent us from writing more code than is necessary to satisfy a focused test.
+
+#### Three Laws of TDD
+1. You must write a failing test before you write any production code.
+1. You must not write more of a test than is sufficient to fail, or fail to compile.
+1. You must not write more production code than is sufficient to make the currently failing test pass.
+
+These tight feedback loops help software developers avoid going down rabbit holes that lead to [over-engineering](https://en.wikipedia.org/wiki/Overengineering).
+

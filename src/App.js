@@ -2,6 +2,7 @@ import './App.css';
 import NoteForm from './NoteForm';
 import React, { useState } from 'react';
 import NoteList from './NoteList';
+import Header from './Header';
 
 function App() {
   const [notes, setNotes] = useState([]);
@@ -9,6 +10,7 @@ function App() {
 
   return (
     <div className="App">
+      <Header />
       <NoteForm notes={notes}  
         formData={formData} 
         setFormDataCallback={setFormData} 
