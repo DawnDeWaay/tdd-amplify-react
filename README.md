@@ -756,3 +756,50 @@ test('should throw an exception the note array is undefined', () => {
 - Commit on Green.
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/8905e6d1e7c40c4ccc912f14bdca83fc19b68b73)
+
+## Usability
+Customers rarely ask explicitly for a usable product.  In this application rich world that we live in it's assumed that applications will be delivered with common sense usability baked-in.  When I look at the application as it stands, a few things pop out at me.
+1. Header - there's no heading telling you what this application does
+1. Validation - there's no form field validation
+1. Reset Form - after a note is created the form fields are not reset
+
+### Header
+- Create a new file `Header.js` in the `src` directory
+```js
+function Header() {
+
+  return (
+
+  );
+}
+
+export 
+```
+- Let's test drive this component
+- Create a new file `Header.test.js` in the `src/test` directory
+```js
+import { render, screen } from '@testing-library/react';
+import Header from '../Header';
+  
+test('should display header', () => {
+  render(<Header />);
+  const heading = screen.getByRole('heading', { level: 1 });
+  expect(heading).toHaveTextContent('My Notes App')
+});
+```
+- We have a failing test.
+- Let's make it pass
+```js
+function Header() {
+
+  return (
+    <h1>My Notes App</h1>
+  );
+}
+
+export default Header;
+```
+- It's Green!
+- Commit your code!
+
+[Code for this section]()
