@@ -945,3 +945,61 @@ test('should add a new note when name and description are provided', () => {
 - Commit!
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/959bafeba3080065bbaa161825d1371b739a3973)
+
+## Reset Form
+One a note is saved the name and description fields should be reset to empty strings.
+
+- Add a test to `NoteForm.test.js`
+```js
+test('should add a new note when name and description are provided', () => {
+    formData.name = "test name";
+    formData.description = "test description";
+
+    const button = screen.getByTestId('note-form-submit');
+
+    fireEvent.click(button);
+
+    expect(formData.name).toBe("");
+    expect(formData.description).toBe("");
+});
+```
+- Make this failing test go Green
+```js
+function createNote() {
+    if (!props.formData.name || !props.formData.description) return;
+    props.setNotesCallback([ ...props.notes, props.formData ]);
+    props.formData.name = '';
+    props.formData.description = '';
+}
+```
+- Green
+- Run the Cypress tests and it's **Red**.
+
+What happened?  Well while this approach worked for a lower level component test it does not work when React is managing its own [state](https://reactjs.org/docs/state-and-lifecycle.html).  React clearly states that you should [not modify state directly](https://reactjs.org/docs/state-and-lifecycle.html#do-not-modify-state-directly).  Instead you should use the [setState](https://reactjs.org/docs/hooks-state.html) callback hook.
+
+- Let's update the test to use the `setFormDataCallback` callback.
+```js
+test('should add a new note when name and description are provided', () => {
+    formData.name = "test name";
+    formData.description = "test description";
+
+    const button = screen.getByTestId('note-form-submit');
+
+    fireEvent.click(button);
+
+    expect(setFormDataCallback).toHaveBeenCalledWith({name: '', description: ''});
+});
+```
+- This red test drives these code changes
+```js
+function createNote() {
+    if (!props.formData.name || !props.formData.description) return;
+    props.setNotesCallback([ ...props.notes, props.formData ]);
+    props.setFormDataCallback({name: '', description: ''});
+}
+```
+- Green!
+- Cypress test is now Green!
+- Commit
+
+[Code for this section]()

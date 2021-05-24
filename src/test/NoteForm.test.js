@@ -2,11 +2,13 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import NoteForm from "../NoteForm";
 
 const setNotesCallback = jest.fn();
+const setFormDataCallback = jest.fn();
 const formData = {name: '', description: ''}
 
 beforeEach(() => {
     render(<NoteForm notes={[]} 
             setNotesCallback={setNotesCallback}
+            setFormDataCallback={setFormDataCallback}
             formData={formData}/>)
 });
 
@@ -29,8 +31,8 @@ test('should display the description placeholder', () => {
 });
 
 test('should require name and description', () => {
-    formData.description = "";
     formData.name = "";
+    formData.description = "";
 
     const button = screen.getByTestId('note-form-submit');
 
@@ -40,8 +42,8 @@ test('should require name and description', () => {
 });
 
 test('should require name when description provided', () => {
-    formData.description = "test description";
     formData.name = "";
+    formData.description = "test description";
 
     const button = screen.getByTestId('note-form-submit');
 
@@ -51,8 +53,8 @@ test('should require name when description provided', () => {
 });
 
 test('should require description when name provided', () => {
-    formData.description = "";
     formData.name = "test name";
+    formData.description = "";
 
     const button = screen.getByTestId('note-form-submit');
 
@@ -62,12 +64,23 @@ test('should require description when name provided', () => {
 });
 
 test('should add a new note when name and description are provided', () => {
-    formData.description = "test description";
     formData.name = "test name";
+    formData.description = "test description";
 
     const button = screen.getByTestId('note-form-submit');
 
     fireEvent.click(button);
 
     expect(setNotesCallback.mock.calls.length).toBe(1);
+});
+
+test('should add a new note when name and description are provided', () => {
+    formData.name = "test name";
+    formData.description = "test description";
+
+    const button = screen.getByTestId('note-form-submit');
+
+    fireEvent.click(button);
+
+    expect(setFormDataCallback).toHaveBeenCalledWith({name: '', description: ''});
 });
