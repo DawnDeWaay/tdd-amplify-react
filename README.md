@@ -760,7 +760,7 @@ test('should throw an exception the note array is undefined', () => {
 ## Usability
 Customers rarely ask explicitly for a usable product.  In this application rich world that we live in it's assumed that applications will be delivered with common sense usability baked-in.  When I look at the application as it stands, a few things pop out at me.
 1. Header - there's no heading telling you what this application does
-1. Validation - there's no form field validation
+1. Form Validation - there's no form field validation
 1. Reset Form - after a note is created the form fields are not reset
 
 ### Header
@@ -845,3 +845,60 @@ This last benefit is worth expounding upon.  The TDD testing cycle keeps us lase
 These tight feedback loops help software developers avoid going down rabbit holes that lead to [over-engineering](https://en.wikipedia.org/wiki/Overengineering).
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/098c4aa47c4c7c8dd85936288f22afa57eb94da9)
+
+### Form Validation
+Let's assume that the note name and description are both required fields.  While you want the customer driving decisions about your product, one way to gather customer feedback is to launch and learn.  As software developers we must be obsessed with our customers.  Set up a regular cadence to meet with your customers and demonstrate a working application.  Make space for them to let you know what they think.
+
+In order to test drive validation we need to determine where in the testing pyramid to write this test.  Remember that the highest-level tests are slow and expensive, so limit these tests between 3 to 5 tests that walk through the most common user experiences.  In order to adequately test all of the combinations of good and bad fields this is not well suited for UI testing.
+
+#### Name and Description Blank
+- Add a test to `NoteForm.test.js`
+```js
+const setNotesCallback = jest.fn();
+const formData = {name: '', description: ''}
+
+beforeEach(() => {
+    render(<NoteForm notes={[]} 
+            setNotesCallback={setNotesCallback}
+            formData={formData}/>)
+});
+
+...
+
+test('should require name and description', () => {
+    const button = screen.getByTestId('note-form-submit');
+
+    fireEvent.click(button)
+
+    expect(setNotesCallback.mock.calls.length).toBe(0);
+});
+```
+- This test checks to see if the jest [mock function](https://jestjs.io/docs/mock-functions) was called.  In this test the note's name and description are blank so a new note should not be created and added to the list of notes.
+- We have a failing test.
+
+```js
+function NoteForm(props) {
+    
+    function createNote() {
+    if (!props.formData.name || !props.formData.description) return;
+    props.setNotesCallback([ ...props.notes, props.formData ]);
+    }
+
+    return (
+        <div>
+
+            ...
+
+            <button data-testid="note-form-submit"
+                onClick={createNote}>
+                Create Note
+            </button> 
+        </div> 
+    );
+}
+```
+- Green! 
+- Rerun you Cypress tests.
+- Commit!
+
+[Code for this section]()

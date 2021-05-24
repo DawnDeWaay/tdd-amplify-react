@@ -1,4 +1,10 @@
 function NoteForm(props) {
+    
+    function createNote() {
+    if (!props.formData.name || !props.formData.description) return;
+    props.setNotesCallback([ ...props.notes, props.formData ]);
+    }
+
     return (
         <div>
             <input data-testid="note-name-field" 
@@ -14,7 +20,7 @@ function NoteForm(props) {
                 )}
                 placeholder="Note Description"/>
             <button data-testid="note-form-submit"
-                onClick={() => props.setNotesCallback([ ...props.notes, props.formData ])}>
+                onClick={createNote}>
                 Create Note
             </button> 
         </div> 
