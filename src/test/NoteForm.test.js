@@ -29,9 +29,45 @@ test('should display the description placeholder', () => {
 });
 
 test('should require name and description', () => {
+    formData.description = "";
+    formData.name = "";
+
     const button = screen.getByTestId('note-form-submit');
 
     fireEvent.click(button)
 
     expect(setNotesCallback.mock.calls.length).toBe(0);
+});
+
+test('should require name when description provided', () => {
+    formData.description = "test description";
+    formData.name = "";
+
+    const button = screen.getByTestId('note-form-submit');
+
+    fireEvent.click(button);
+
+    expect(setNotesCallback.mock.calls.length).toBe(0);
+});
+
+test('should require description when name provided', () => {
+    formData.description = "";
+    formData.name = "test name";
+
+    const button = screen.getByTestId('note-form-submit');
+
+    fireEvent.click(button);
+
+    expect(setNotesCallback.mock.calls.length).toBe(0);
+});
+
+test('should add a new note when name and description are provided', () => {
+    formData.description = "test description";
+    formData.name = "test name";
+
+    const button = screen.getByTestId('note-form-submit');
+
+    fireEvent.click(button);
+
+    expect(setNotesCallback.mock.calls.length).toBe(1);
 });

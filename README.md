@@ -897,8 +897,51 @@ function NoteForm(props) {
     );
 }
 ```
+
 - Green! 
 - Rerun you Cypress tests.
 - Commit!
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/d1e426596870c78f083c057ef88a7f50f5c6787b)
+
+#### Name And Description Required
+```js
+test('should require name when description provided', () => {
+    formData.description = "test description";
+    formData.name = "";
+
+    const button = screen.getByTestId('note-form-submit');
+
+    fireEvent.click(button);
+
+    expect(setNotesCallback.mock.calls.length).toBe(0);
+});
+
+test('should require description when name provided', () => {
+    formData.description = "";
+    formData.name = "test name";
+
+    const button = screen.getByTestId('note-form-submit');
+
+    fireEvent.click(button);
+
+    expect(setNotesCallback.mock.calls.length).toBe(0);
+});
+
+test('should add a new note when name and description are provided', () => {
+    formData.description = "test description";
+    formData.name = "test name";
+
+    const button = screen.getByTestId('note-form-submit');
+
+    fireEvent.click(button);
+
+    expect(setNotesCallback.mock.calls.length).toBe(1);
+});
+
+```
+- All of these tests go green with no additional production code changes.
+- Rerun you Cypress tests.
+- Commit!
+
+[Code for this section]()
