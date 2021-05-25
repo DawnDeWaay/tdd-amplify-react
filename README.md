@@ -277,7 +277,7 @@ Congratulations, you've successfully made an internal structural change "without
 </details>
 
 <details>
-  <summary>NoteForm Testt</summary>
+  <summary>NoteForm Test</summary>
 
 ## NoteForm Test
 
@@ -541,52 +541,73 @@ const [formData, setFormData] = useState({ name: "", description: "" });
 Using these variables and callback functions can be a bit overwhelming so we will look at each element in the `NoteForm` component one at a time.
 
 - Add an `onChange` attribute to the `note-name-field` element
+
 ```js
-<input data-testid="note-name-field" 
-  onChange={e => props.setFormDataCallback({ 
-      ...props.formData, 
-      'name': e.target.value}
-  )}
-  placeholder="Note Name"/>
+<input
+  data-testid="note-name-field"
+  onChange={(e) =>
+    props.setFormDataCallback({
+      ...props.formData,
+      name: e.target.value,
+    })
+  }
+  placeholder="Note Name"
+/>
 ```
-- The `onChange` function is called every time the name is changed.  
-  - The `e` is the event which is used to get the target element which contains the value that the user entered.  
+
+- The `onChange` function is called every time the name is changed.
+
+  - The `e` is the event which is used to get the target element which contains the value that the user entered.
   - The [=>](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions) is an arrow function expression which is an alternative to a traditional javascript function expression.
-  - The rest of the function is a call to the `setFormData` hook that we passed to the `NoteForm` component.  If this were not spread across 3 lines it would read more like this `setFormDataCallback({'name': 'some value'})`.  Granted there is one more thing happening in this call, the existing form data is being [spread](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax) with the `...` syntax.  Simply put we are creating a new javascript object by opening and closing with curly braces.  Add all of the existing form data prior to the change.  And finally add the new `name` value which will overwrite the form data that was spread.  There is a lot going on in this small function.
+  - The rest of the function is a call to the `setFormData` hook that we passed to the `NoteForm` component. If this were not spread across 3 lines it would read more like this `setFormDataCallback({'name': 'some value'})`. Granted there is one more thing happening in this call, the existing form data is being [spread](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax) with the `...` syntax. Simply put we are creating a new javascript object by opening and closing with curly braces. Add all of the existing form data prior to the change. And finally add the new `name` value which will overwrite the form data that was spread. There is a lot going on in this small function.
 
 - Add an `onChange` attribute to the `note-description-field` element
-```js 
-<input data-testid="note-description-field" 
-    onChange={e => props.setFormDataCallback({ 
-        ...props.formData, 
-        'description': e.target.value}
-    )}
-    placeholder="Note Description"/>
+
+```js
+<input
+  data-testid="note-description-field"
+  onChange={(e) =>
+    props.setFormDataCallback({
+      ...props.formData,
+      description: e.target.value,
+    })
+  }
+  placeholder="Note Description"
+/>
 ```
+
 - This is exactly the same as the name `onChange` function with the exception of the targe value's field name `'description'`.
 
 - Add an `onClick` attribute to the `note-form-submit` element
+
 ```js
-<button data-testid="note-form-submit"
-  onClick={() => props.setNotesCallback([ ...props.notes, props.formData ])}>
+<button
+  data-testid="note-form-submit"
+  onClick={() => props.setNotesCallback([...props.notes, props.formData])}
+>
   Create Note
 </button>
 ```
+
 - The `onClick` function is called every time the `Create Note` button is clicked
-  - The `setNotesCallback` callback is called with a new [array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) that contains all of the existing notes pulse the note that we just entered.  
+  - The `setNotesCallback` callback is called with a new [array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) that contains all of the existing notes pulse the note that we just entered.
 - Rerun the Cypress test and it is Green.
 
 - However if you run `npm run test` the non-UI tests are failing.
+
 ```
 TypeError: Cannot read property 'map' of undefined
 ```
-- The `NoteForm.test.js` component test does not pass any parameters to the component so the `props.notes` is [undefined](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined).  In order to fix this test we must pass an array of `notes` to the `NoteForm` component.
+
+- The `NoteForm.test.js` component test does not pass any parameters to the component so the `props.notes` is [undefined](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined). In order to fix this test we must pass an array of `notes` to the `NoteForm` component.
+
 ```js
 beforeEach(() => {
-    render(<NoteForm notes={[]}/>)
+  render(<NoteForm notes={[]} />);
 });
 ```
-- The simplest thing that you can do is pass an empty array to `NoteForm`.  And the tests pass.
+
+- The simplest thing that you can do is pass an empty array to `NoteForm`. And the tests pass.
 
 - All of our tests are Green!
 - Don't forget to commit your changes
@@ -599,113 +620,134 @@ beforeEach(() => {
   <summary>Refactor - Single Responsibility</summary>
 
 ## Refactor - Single Responsibility
+
 > The Single Responsibility Principle (SRP) states that each software module should have one and only one reason to change. - Robert C. Martin
 
 Now it's clear that the `NoteForm` component has more than one responsibility:
+
 ```js
 function NoteForm(props) {
-    return (
+  return (
+    <div>
+      // 1. Note Creation
+      <input
+        data-testid="note-name-field"
+        onChange={(e) =>
+          props.setFormDataCallback({
+            ...props.formData,
+            name: e.target.value,
+          })
+        }
+        placeholder="Note Name"
+      />
+      <input
+        data-testid="note-description-field"
+        onChange={(e) =>
+          props.setFormDataCallback({
+            ...props.formData,
+            description: e.target.value,
+          })
+        }
+        placeholder="Note Description"
+      />
+      <button
+        data-testid="note-form-submit"
+        onClick={() => props.setNotesCallback([...props.notes, props.formData])}
+      >
+        Create Note
+      </button>
+      // 2. Note Listing
+      {props.notes.map((note, index) => (
         <div>
-            // 1. Note Creation
-            <input data-testid="note-name-field" 
-                onChange={e => props.setFormDataCallback({ 
-                    ...props.formData, 
-                    'name': e.target.value}
-                )}
-                placeholder="Note Name"/>
-            <input data-testid="note-description-field" 
-                onChange={e => props.setFormDataCallback({ 
-                    ...props.formData, 
-                    'description': e.target.value}
-                )}
-                placeholder="Note Description"/>
-            <button data-testid="note-form-submit"
-                onClick={() => props.setNotesCallback([ ...props.notes, props.formData ])}>
-                Create Note
-            </button>
-            // 2. Note Listing
-            {
-                props.notes.map((note, index) => (
-                    <div>
-                        <p data-testid={"test-name-" + index}>{note.name}</p>
-                        <p data-testid={"test-description-" + index}>{note.description}</p>  
-                    </div>
-                ))
-            }  
-        </div> 
-    );
+          <p data-testid={"test-name-" + index}>{note.name}</p>
+          <p data-testid={"test-description-" + index}>{note.description}</p>
+        </div>
+      ))}
+    </div>
+  );
 }
 ```
-If you go up to the `App` component the call to the `NoteForm` component takes 4 arguments.  This is a [smell](https://en.wikipedia.org/wiki/Code_smell) pointing to the fact that this component is doing too many things.
+
+If you go up to the `App` component the call to the `NoteForm` component takes 4 arguments. This is a [smell](https://en.wikipedia.org/wiki/Code_smell) pointing to the fact that this component is doing too many things.
+
 ```js
-<NoteForm notes={notes}  
-  formData={formData} 
-  setFormDataCallback={setFormData} 
-  setNotesCallback={setNotes}/>
+<NoteForm
+  notes={notes}
+  formData={formData}
+  setFormDataCallback={setFormData}
+  setNotesCallback={setNotes}
+/>
 ```
+
 > Functions should have a small number of arguments. No argument is best, followed by one, two, and three. More than three is very questionable and should be avoided with prejudice. - Robert C. Martin
 
-While components don't look like functions when they are called but they are.  React uses [JSX](https://reactjs.org/docs/introducing-jsx.html) which is interpreted into functions.
+While components don't look like functions when they are called but they are. React uses [JSX](https://reactjs.org/docs/introducing-jsx.html) which is interpreted into functions.
 
 ### Note List Component
+
 Let's pull out a `NoteList.js` component in order to separate these responsibilities.
 
 - Create a new file called `NoteList.js` under the `src` directory.
+
 ```js
 function NoteList(props) {
 
   return (
-    
+
   );
 }
 
 export default NoteList;
 ```
+
 - Cut the JSX that lists notes in the `NoteForm` component and paste the in the new component.
+
 ```js
 function NoteList(props) {
-
   return (
     <div>
-      {
-          props.notes.map((note, index) => (
-              <div>
-                  <p data-testid={"test-name-" + index}>{note.name}</p>
-                  <p data-testid={"test-description-" + index}>{note.description}</p>  
-              </div>
-          ))
-      } 
+      {props.notes.map((note, index) => (
+        <div>
+          <p data-testid={"test-name-" + index}>{note.name}</p>
+          <p data-testid={"test-description-" + index}>{note.description}</p>
+        </div>
+      ))}
     </div>
   );
 }
 
 export default NoteList;
 ```
-- Now instead of adding the `NoteList` component back into the `NoteForm` component, bring it up a level and place it in the `App` component.  This prevents unnecessary [coupling](https://en.wikipedia.org/wiki/Coupling_(computer_programming)) between the `NoteForm` component and the `NoteList` component.
+
+- Now instead of adding the `NoteList` component back into the `NoteForm` component, bring it up a level and place it in the `App` component. This prevents unnecessary [coupling](<https://en.wikipedia.org/wiki/Coupling_(computer_programming)>) between the `NoteForm` component and the `NoteList` component.
+
 ```js
-import './App.css';
-import NoteForm from './NoteForm';
-import React, { useState } from 'react';
-import NoteList from './NoteList';
+import "./App.css";
+import NoteForm from "./NoteForm";
+import React, { useState } from "react";
+import NoteList from "./NoteList";
 
 function App() {
   const [notes, setNotes] = useState([]);
-  const [formData, setFormData] = useState({ name: '', description: '' });
+  const [formData, setFormData] = useState({ name: "", description: "" });
 
   return (
     <div className="App">
-      <NoteForm notes={notes}  
-        formData={formData} 
-        setFormDataCallback={setFormData} 
-        setNotesCallback={setNotes}/>
-      <NoteList notes={notes}/>
+      <NoteForm
+        notes={notes}
+        formData={formData}
+        setFormDataCallback={setFormData}
+        setNotesCallback={setNotes}
+      />
+      <NoteList notes={notes} />
     </div>
   );
 }
 
 export default App;
 ```
-- Run all of your tests including Cypress. 
+
+- Run all of your tests including Cypress.
 - It's Green!
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/8f8f00cb21ae991a253454a78a6043d38a91adfc)
@@ -716,69 +758,80 @@ export default App;
   <summary>Testing NoteList Component</summary>
 
 ## Testing NoteList Component
-As we refactor we need to remember what level of testing we have written within the testing pyramid.  While we have a few far reaching tests at the top of the pyramid, don't think that they adequately test the behavior of each component.  The bottom of the testing pyramid is wide because it provides broad test coverage.
+
+As we refactor we need to remember what level of testing we have written within the testing pyramid. While we have a few far reaching tests at the top of the pyramid, don't think that they adequately test the behavior of each component. The bottom of the testing pyramid is wide because it provides broad test coverage.
 
 Now that `NoteList` is broken out into its own focused component it will be much easier to test.
+
 - Create a new `NoteList.test.js` under the `src/test/` directory.
 
 ### Test No Notes
+
 - Write a test that verifies that no notes are rendered when no notes are provided
+
 ```js
-import { render, screen, getByTestId } from '@testing-library/react';
-import NoteList from '../NoteList';
+import { render, screen, getByTestId } from "@testing-library/react";
+import NoteList from "../NoteList";
 
-test('should display nothing when no notes are provided', () => {
-    render(<NoteList notes={[]} />)
-    const firstNoteName = screen.queryByTestId('test-name-0');
+test("should display nothing when no notes are provided", () => {
+  render(<NoteList notes={[]} />);
+  const firstNoteName = screen.queryByTestId("test-name-0");
 
-    expect(firstNoteName).toBeNull()
+  expect(firstNoteName).toBeNull();
 });
 ```
 
 - Write a test that verifies that one note is rendered
+
 ```js
-test('should display one note when one notes is provided', () => {
-    const note = {name: 'test name', description: 'test description'}
-    render(<NoteList notes={[note]} />)
+test("should display one note when one notes is provided", () => {
+  const note = { name: "test name", description: "test description" };
+  render(<NoteList notes={[note]} />);
 
-    const firstNoteName = screen.queryByTestId('test-name-0');
-    expect(firstNoteName).toHaveTextContent("test name");
+  const firstNoteName = screen.queryByTestId("test-name-0");
+  expect(firstNoteName).toHaveTextContent("test name");
 
-    const firstNoteDescription = screen.queryByTestId('test-description-0');
-    expect(firstNoteDescription).toHaveTextContent("test description");
+  const firstNoteDescription = screen.queryByTestId("test-description-0");
+  expect(firstNoteDescription).toHaveTextContent("test description");
 });
 ```
+
 - Write a test that verifies that multiple notes are rendered
+
 ```js
-test('should display one note when one notes is provided', () => {
-    const firstNote = {name: 'test name 1', description: 'test description 1'}
-    const secondNote = {name: 'test name 1', description: 'test description 1'}
-    render(<NoteList notes={[firstNote, secondNote]} />)
+test("should display one note when one notes is provided", () => {
+  const firstNote = { name: "test name 1", description: "test description 1" };
+  const secondNote = { name: "test name 1", description: "test description 1" };
+  render(<NoteList notes={[firstNote, secondNote]} />);
 
-    const firstNoteName = screen.queryByTestId('test-name-0');
-    expect(firstNoteName).toHaveTextContent("test name");
+  const firstNoteName = screen.queryByTestId("test-name-0");
+  expect(firstNoteName).toHaveTextContent("test name");
 
-    const firstNoteDescription = screen.queryByTestId('test-description-0');
-    expect(firstNoteDescription).toHaveTextContent("test description");
+  const firstNoteDescription = screen.queryByTestId("test-description-0");
+  expect(firstNoteDescription).toHaveTextContent("test description");
 
+  const secondNoteName = screen.queryByTestId("test-name-1");
+  expect(secondNoteName).toHaveTextContent("test name");
 
-    const secondNoteName = screen.queryByTestId('test-name-1');
-    expect(secondNoteName).toHaveTextContent("test name");
-
-    const secondNoteDescription = screen.queryByTestId('test-description-1');
-    expect(secondNoteDescription).toHaveTextContent("test description");
+  const secondNoteDescription = screen.queryByTestId("test-description-1");
+  expect(secondNoteDescription).toHaveTextContent("test description");
 });
 ```
-- Write a test that verifies an exception is thrown when a list is not provided.  
 
-This may seem unnecessary but it's important to test negative cases too.  Tests not ony provide accountability and quick feedback loops for the [application under test](https://en.wikipedia.org/wiki/System_under_test) but it also provides [living documentation](https://en.wikipedia.org/wiki/Living_document) for new and existing team members.
+- Write a test that verifies an exception is thrown when a list is not provided.
+
+This may seem unnecessary but it's important to test negative cases too. Tests not ony provide accountability and quick feedback loops for the [application under test](https://en.wikipedia.org/wiki/System_under_test) but it also provides [living documentation](https://en.wikipedia.org/wiki/Living_document) for new and existing team members.
+
 ```js
-test('should throw an exception the note array is undefined', () => {
-    expect(() => {render(<NoteList />)}).toThrowError();
+test("should throw an exception the note array is undefined", () => {
+  expect(() => {
+    render(<NoteList />);
+  }).toThrowError();
 });
 ```
+
 - All of your non-UI tests are Green.
-- Don't forget to rerun your Cypress tests.  Green!
+- Don't forget to rerun your Cypress tests. Green!
 - Commit on Green.
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/8905e6d1e7c40c4ccc912f14bdca83fc19b68b73)
@@ -789,13 +842,17 @@ test('should throw an exception the note array is undefined', () => {
   <summary>Usability</summary>
 
 ## Usability
-Customers rarely ask explicitly for a usable product.  In this application rich world that we live in it's assumed that applications will be delivered with common sense usability baked-in.  When I look at the application as it stands, a few things pop out at me.
+
+Customers rarely ask explicitly for a usable product. In this application rich world that we live in it's assumed that applications will be delivered with common sense usability baked-in. When I look at the application as it stands, a few things pop out at me.
+
 1. Header - there's no heading telling you what this application does
 1. Form Validation - there's no form field validation
 1. Reset Form - after a note is created the form fields are not reset
 
 ### Header
+
 - Create a new file `Header.js` in the `src` directory
+
 ```js
 function Header() {
 
@@ -804,71 +861,82 @@ function Header() {
   );
 }
 
-export 
+export
 ```
+
 - Let's test drive this component
 - Create a new file `Header.test.js` in the `src/test` directory
+
 ```js
-import { render, screen } from '@testing-library/react';
-import Header from '../Header';
-  
-test('should display header', () => {
+import { render, screen } from "@testing-library/react";
+import Header from "../Header";
+
+test("should display header", () => {
   render(<Header />);
-  const heading = screen.getByRole('heading', { level: 1 });
-  expect(heading).toHaveTextContent('My Notes App')
+  const heading = screen.getByRole("heading", { level: 1 });
+  expect(heading).toHaveTextContent("My Notes App");
 });
 ```
+
 - We have a failing test.
 - Let's make it pass
+
 ```js
 function Header() {
-
-  return (
-    <h1>My Notes App</h1>
-  );
+  return <h1>My Notes App</h1>;
 }
 
 export default Header;
 ```
+
 - It's Green!
 - Commit your code!
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/4f4defe7251bc2274b1a348a3c68c3efdb640ceb)
 
 ### Hook Up Header
-Even though the component is test driven and ready to be used, we have not used it yet outside the test.  Let's drive this change through the Cypress test.
+
+Even though the component is test driven and ready to be used, we have not used it yet outside the test. Let's drive this change through the Cypress test.
 
 - Add a test that asserts the header
+
 ```js
-it('should have header', () => {
-    cy.get('h1').should('have.text', 'My Notes App')
-})
+it("should have header", () => {
+  cy.get("h1").should("have.text", "My Notes App");
+});
 ```
+
 - It fails
 - Add the component to the `App` component
+
 ```js
 return (
   <div className="App">
     <Header />
-    <NoteForm notes={notes}  
-      formData={formData} 
-      setFormDataCallback={setFormData} 
-      setNotesCallback={setNotes}/>
-    <NoteList notes={notes}/>
+    <NoteForm
+      notes={notes}
+      formData={formData}
+      setFormDataCallback={setFormData}
+      setNotesCallback={setNotes}
+    />
+    <NoteList notes={notes} />
   </div>
 );
 ```
+
 - It's Green!
 - Commit!
 
-You will notice that in the TDD testing cycle we commit very small bits of working code.  We commit all the time.  While this may seem like overkill, here are some benefits.
-1. Our commit messages tell a focused, step-by-step story that explains why we made each change.
-1. We are preserving working code.  ["Working software is the primary measure of progress."](https://agilemanifesto.org/principles.html)
-1. We can [revert](https://en.wikipedia.org/wiki/Reversion_(software_development)) our changes back to a know working state without loosing very many changes.
+You will notice that in the TDD testing cycle we commit very small bits of working code. We commit all the time. While this may seem like overkill, here are some benefits.
 
-This last benefit is worth expounding upon.  The TDD testing cycle keeps us laser focused on writing small pieces of working functionality.  In fact the [3 Laws of TDD](http://blog.cleancoder.com/uncle-bob/2014/12/17/TheCyclesOfTDD.html) prevent us from writing more code than is necessary to satisfy a focused test.
+1. Our commit messages tell a focused, step-by-step story that explains why we made each change.
+1. We are preserving working code. ["Working software is the primary measure of progress."](https://agilemanifesto.org/principles.html)
+1. We can [revert](<https://en.wikipedia.org/wiki/Reversion_(software_development)>) our changes back to a know working state without loosing very many changes.
+
+This last benefit is worth expounding upon. The TDD testing cycle keeps us laser focused on writing small pieces of working functionality. In fact the [3 Laws of TDD](http://blog.cleancoder.com/uncle-bob/2014/12/17/TheCyclesOfTDD.html) prevent us from writing more code than is necessary to satisfy a focused test.
 
 #### Three Laws of TDD
+
 1. You must write a failing test before you write any production code.
 1. You must not write more of a test than is sufficient to fail, or fail to compile.
 1. You must not write more production code than is sufficient to make the currently failing test pass.
@@ -878,18 +946,21 @@ These tight feedback loops help software developers avoid going down rabbit hole
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/098c4aa47c4c7c8dd85936288f22afa57eb94da9)
 
 ### Form Validation
-Let's assume that the note name and description are both required fields.  While you want the customer driving decisions about your product, one way to gather customer feedback is to launch and learn.  As software developers we must be obsessed with our customers.  Set up a regular cadence to meet with your customers and demonstrate a working application.  Make space for them to let you know what they think.
 
-In order to test drive validation we need to determine where in the testing pyramid to write this test.  Remember that the highest-level tests are slow and expensive, so limit these tests between 3 to 5 tests that walk through the most common user experiences.  In order to adequately test all of the combinations of good and bad fields this is not well suited for UI testing.
+Let's assume that the note name and description are both required fields. While you want the customer driving decisions about your product, one way to gather customer feedback is to launch and learn. As software developers we must be obsessed with our customers. Set up a regular cadence to meet with your customers and demonstrate a working application. Make space for them to let you know what they think.
+
+In order to test drive validation we need to determine where in the testing pyramid to write this test. Remember that the highest-level tests are slow and expensive, so limit these tests between 3 to 5 tests that walk through the most common user experiences. In order to adequately test all of the combinations of good and bad fields this is not well suited for UI testing.
 
 #### Name and Description Blank
+
 - Add a test to `NoteForm.test.js`
+
 ```js
 const setNotesCallback = jest.fn();
 const formData = {name: '', description: ''}
 
 beforeEach(() => {
-    render(<NoteForm notes={[]} 
+    render(<NoteForm notes={[]}
             setNotesCallback={setNotesCallback}
             formData={formData}/>)
 });
@@ -904,73 +975,71 @@ test('should require name and description', () => {
     expect(setNotesCallback.mock.calls.length).toBe(0);
 });
 ```
-- This test checks to see if the jest [mock function](https://jestjs.io/docs/mock-functions) was called.  In this test the note's name and description are blank so a new note should not be created and added to the list of notes.
+
+- This test checks to see if the jest [mock function](https://jestjs.io/docs/mock-functions) was called. In this test the note's name and description are blank so a new note should not be created and added to the list of notes.
 - We have a failing test.
 
 ```js
 function NoteForm(props) {
-    
-    function createNote() {
+  function createNote() {
     if (!props.formData.name || !props.formData.description) return;
-    props.setNotesCallback([ ...props.notes, props.formData ]);
-    }
+    props.setNotesCallback([...props.notes, props.formData]);
+  }
 
-    return (
-        <div>
-
-            ...
-
-            <button data-testid="note-form-submit"
-                onClick={createNote}>
-                Create Note
-            </button> 
-        </div> 
-    );
+  return (
+    <div>
+      ...
+      <button data-testid="note-form-submit" onClick={createNote}>
+        Create Note
+      </button>
+    </div>
+  );
 }
 ```
 
-- Green! 
+- Green!
 - Rerun you Cypress tests.
 - Commit!
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/d1e426596870c78f083c057ef88a7f50f5c6787b)
 
 #### Name And Description Required
+
 ```js
-test('should require name when description provided', () => {
-    formData.description = "test description";
-    formData.name = "";
+test("should require name when description provided", () => {
+  formData.description = "test description";
+  formData.name = "";
 
-    const button = screen.getByTestId('note-form-submit');
+  const button = screen.getByTestId("note-form-submit");
 
-    fireEvent.click(button);
+  fireEvent.click(button);
 
-    expect(setNotesCallback.mock.calls.length).toBe(0);
+  expect(setNotesCallback.mock.calls.length).toBe(0);
 });
 
-test('should require description when name provided', () => {
-    formData.description = "";
-    formData.name = "test name";
+test("should require description when name provided", () => {
+  formData.description = "";
+  formData.name = "test name";
 
-    const button = screen.getByTestId('note-form-submit');
+  const button = screen.getByTestId("note-form-submit");
 
-    fireEvent.click(button);
+  fireEvent.click(button);
 
-    expect(setNotesCallback.mock.calls.length).toBe(0);
+  expect(setNotesCallback.mock.calls.length).toBe(0);
 });
 
-test('should add a new note when name and description are provided', () => {
-    formData.description = "test description";
-    formData.name = "test name";
+test("should add a new note when name and description are provided", () => {
+  formData.description = "test description";
+  formData.name = "test name";
 
-    const button = screen.getByTestId('note-form-submit');
+  const button = screen.getByTestId("note-form-submit");
 
-    fireEvent.click(button);
+  fireEvent.click(button);
 
-    expect(setNotesCallback.mock.calls.length).toBe(1);
+  expect(setNotesCallback.mock.calls.length).toBe(1);
 });
-
 ```
+
 - All of these tests go green with no additional production code changes.
 - Rerun you Cypress tests.
 - Commit!
@@ -983,57 +1052,69 @@ test('should add a new note when name and description are provided', () => {
   <summary>Reset Form</summary>
 
 ## Reset Form
+
 One a note is saved the name and description fields should be reset to empty strings.
 
 - Add a test to `NoteForm.test.js`
+
 ```js
-test('should add a new note when name and description are provided', () => {
-    formData.name = "test name";
-    formData.description = "test description";
+test("should add a new note when name and description are provided", () => {
+  formData.name = "test name";
+  formData.description = "test description";
 
-    const button = screen.getByTestId('note-form-submit');
+  const button = screen.getByTestId("note-form-submit");
 
-    fireEvent.click(button);
+  fireEvent.click(button);
 
-    expect(formData.name).toBe("");
-    expect(formData.description).toBe("");
+  expect(formData.name).toBe("");
+  expect(formData.description).toBe("");
 });
 ```
+
 - Make this failing test go Green
+
 ```js
 function createNote() {
-    if (!props.formData.name || !props.formData.description) return;
-    props.setNotesCallback([ ...props.notes, props.formData ]);
-    props.formData.name = '';
-    props.formData.description = '';
+  if (!props.formData.name || !props.formData.description) return;
+  props.setNotesCallback([...props.notes, props.formData]);
+  props.formData.name = "";
+  props.formData.description = "";
 }
 ```
+
 - Green
 - Run the Cypress tests and it's **Red**.
 
-What happened?  Well while this approach worked for a lower level component test it does not work when React is managing its own [state](https://reactjs.org/docs/state-and-lifecycle.html).  React clearly states that you should [not modify state directly](https://reactjs.org/docs/state-and-lifecycle.html#do-not-modify-state-directly).  Instead you should use the [setState](https://reactjs.org/docs/hooks-state.html) callback hook.
+What happened? Well while this approach worked for a lower level component test it does not work when React is managing its own [state](https://reactjs.org/docs/state-and-lifecycle.html). React clearly states that you should [not modify state directly](https://reactjs.org/docs/state-and-lifecycle.html#do-not-modify-state-directly). Instead you should use the [setState](https://reactjs.org/docs/hooks-state.html) callback hook.
 
 - Let's update the test to use the `setFormDataCallback` callback.
+
 ```js
-test('should add a new note when name and description are provided', () => {
-    formData.name = "test name";
-    formData.description = "test description";
+test("should add a new note when name and description are provided", () => {
+  formData.name = "test name";
+  formData.description = "test description";
 
-    const button = screen.getByTestId('note-form-submit');
+  const button = screen.getByTestId("note-form-submit");
 
-    fireEvent.click(button);
+  fireEvent.click(button);
 
-    expect(setFormDataCallback).toHaveBeenCalledWith({name: '', description: ''});
+  expect(setFormDataCallback).toHaveBeenCalledWith({
+    name: "",
+    description: "",
+  });
 });
 ```
+
 - This red test drives these code changes
+
 ```js
 function createNote() {
-    if (!props.formData.name || !props.formData.description) return;
-    props.setNotesCallback([ ...props.notes, props.formData ]);
-    props.setFormDataCallback({name: '', description: ''});
+  if (!props.formData.name || !props.formData.description) return;
+  props.setNotesCallback([...props.notes, props.formData]);
+  props.setFormDataCallback({ name: "", description: "" });
 }
 ```
+
 - Green!
 - Cypress test is now Green!
 - Commit
@@ -1046,47 +1127,59 @@ function createNote() {
   <summary>Demo Your Application To Your Customer</summary>
 
 ## Demo Your Application To Your Customer
-Be sure to start up your application and walk through it with your customers.  When I was doing this I noticed that the form is not resetting after a note is created.  This is very annoying.  In order to test drive this behavior I will add two additional assertions to the end of the UI test to verify that the form is reset.
+
+Be sure to start up your application and walk through it with your customers. When I was doing this I noticed that the form is not resetting after a note is created. This is very annoying. In order to test drive this behavior I will add two additional assertions to the end of the UI test to verify that the form is reset.
+
 ```js
-describe('Note Capture', () => {
-    it('should create a note when name and description provided', () => {
-        cy.get('[data-testid=test-name-0]').should('not.exist');
-        cy.get('[data-testid=test-description-0]').should('not.exist');
-        
-        cy.get('[data-testid=note-name-field]').type('test note');
-        cy.get('[data-testid=note-description-field]').type('test note description');
-        cy.get('[data-testid=note-form-submit]').click();
+describe("Note Capture", () => {
+  it("should create a note when name and description provided", () => {
+    cy.get("[data-testid=test-name-0]").should("not.exist");
+    cy.get("[data-testid=test-description-0]").should("not.exist");
 
-        cy.get('[data-testid=note-name-field]').should('have.value', '');
-        cy.get('[data-testid=note-description-field]').should('have.value', '');
+    cy.get("[data-testid=note-name-field]").type("test note");
+    cy.get("[data-testid=note-description-field]").type(
+      "test note description"
+    );
+    cy.get("[data-testid=note-form-submit]").click();
 
-        cy.get('[data-testid=test-name-0]').should('have.text', 'test note');
-        cy.get('[data-testid=test-description-0]').should('have.text', 'test note description');
-    });
+    cy.get("[data-testid=note-name-field]").should("have.value", "");
+    cy.get("[data-testid=note-description-field]").should("have.value", "");
+
+    cy.get("[data-testid=test-name-0]").should("have.text", "test note");
+    cy.get("[data-testid=test-description-0]").should(
+      "have.text",
+      "test note description"
+    );
+  });
 });
 ```
+
 - This test now fails with
+
 ```
 get [data-testid=note-name-field]
 assert expected <input> to have value '', but the value was test note
 ```
+
 - To make this pass we need to connect the name and description fields to the form data in `NoteForm.js`
+
 ```js
-<input data-testid="note-name-field" 
-    onChange={e => props.setFormDataCallback({ 
-        ...props.formData, 
+<input data-testid="note-name-field"
+    onChange={e => props.setFormDataCallback({
+        ...props.formData,
         'name': e.target.value}
     )}
     value={props.formData.name}
     placeholder="Note Name"/>
-<input data-testid="note-description-field" 
-    onChange={e => props.setFormDataCallback({ 
-        ...props.formData, 
+<input data-testid="note-description-field"
+    onChange={e => props.setFormDataCallback({
+        ...props.formData,
         'description': e.target.value}
     )}
     value={props.formData.description}
     placeholder="Note Description"/>
 ```
+
 - Green! Commit!
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/dd2d3f0ef360e5b9a587cfab95ee61b666e6be0f)
@@ -1097,59 +1190,68 @@ assert expected <input> to have value '', but the value was test note
   <summary>Saving Notes For Real</summary>
 
 ## Saving Notes For Real
-React creates a [single page web application](https://en.wikipedia.org/wiki/Single-page_application).  This means that the React state does not [persist](https://en.wikipedia.org/wiki/Persistence_(computer_science)) beyond a web page refresh.  In other words, if you refresh your browser page you will loose all of notes you created.
+
+React creates a [single page web application](https://en.wikipedia.org/wiki/Single-page_application). This means that the React state does not [persist](<https://en.wikipedia.org/wiki/Persistence_(computer_science)>) beyond a web page refresh. In other words, if you refresh your browser page you will loose all of notes you created.
 
 Since Cypress tests the application in a browser, this is most logical place to test this user expectation.
 
 ```js
-it('should load previously saved notes on browser refresh', () => {
-    cy.reload()
+it("should load previously saved notes on browser refresh", () => {
+  cy.reload();
 
-    cy.get('[data-testid=test-name-0]').should('have.text', 'test note');
-    cy.get('[data-testid=test-description-0]').should('have.text', 'test note description');
-})
+  cy.get("[data-testid=test-name-0]").should("have.text", "test note");
+  cy.get("[data-testid=test-description-0]").should(
+    "have.text",
+    "test note description"
+  );
+});
 ```
-- We now have a failing test.  In order to save notes between page reloads we will use [localforage](https://www.npmjs.com/package/localforage).
+
+- We now have a failing test. In order to save notes between page reloads we will use [localforage](https://www.npmjs.com/package/localforage).
 
 - Run `npm install localforage`
 - Add a callback function to `App.js` that will lookup up notes that are saved in `localforage`
+
 ```js
 function fetchNotesCallback() {
-  localForage.getItem('notes').then(function(value) {
-    if(value)
-      setNotes(value);
-    else
-      setNotes([])
+  localForage.getItem("notes").then(function (value) {
+    if (value) setNotes(value);
+    else setNotes([]);
   });
 }
 ```
+
 - The `if` check determines if there are any notes in `localforage` and sets the `notes` accordingly.
 
 - Add a callback function to `App.js` that will save newly created notes to `localforage`
+
 ```js
 function createNote() {
-  const updatedNoteList = [ ...notes, formData ];
+  const updatedNoteList = [...notes, formData];
   setNotes(updatedNoteList);
-  localForage.setItem('notes', updatedNoteList);
+  localForage.setItem("notes", updatedNoteList);
 }
 ```
 
 - Update the `NoteForm` component in `App.js` to take the new `createNote` callback function instead of the `setNotes` hook.
+
 ```js
-<NoteForm notes={notes}  
-  formData={formData} 
-  setFormDataCallback={setFormData} 
+<NoteForm notes={notes}
+  formData={formData}
+  setFormDataCallback={setFormData}
   createNoteCallback={createNote}/>
 <NoteList notes={notes}/>
 ```
+
 - Update the `NoteForm.test.js` to use the renamed parameter.
+
 ```js
 const createNoteCallback = jest.fn();
 const setFormDataCallback = jest.fn();
 const formData = {name: '', description: ''}
 
 beforeEach(() => {
-    render(<NoteForm notes={[]} 
+    render(<NoteForm notes={[]}
             createNoteCallback={createNoteCallback}
             setFormDataCallback={setFormDataCallback}
             formData={formData}/>)
@@ -1179,6 +1281,7 @@ test('should add a new note when name and description are provided', () => {
 ```
 
 - To load the saved notes when the application is loaded add the [useEffect](https://reactjs.org/docs/hooks-effect.html#example-using-hooks) hook and call the `fetchNotesCallback` in `App.js`.
+
 ```js
 useEffect(() => {
   fetchNotesCallback();
@@ -1186,20 +1289,23 @@ useEffect(() => {
 ```
 
 - Update `NoteForm.js` to use the new `createNoteCallback` parameter.
+
 ```js
 function createNote() {
-    if (!props.formData.name || !props.formData.description) return;
-    props.createNoteCallback();
-    props.setFormDataCallback({name: '', description: ''});
+  if (!props.formData.name || !props.formData.description) return;
+  props.createNoteCallback();
+  props.setFormDataCallback({ name: "", description: "" });
 }
 ```
 
 - Lastly make sure you clean up the persisted notes after the Cypress test is run.
+
 ```js
 after(() => {
   localForage.clear().then(() => {});
 });
 ```
+
 - All the tests are Green
 - Commit
 
@@ -1211,42 +1317,42 @@ after(() => {
   <summary>Refactor To Repository</summary>
 
 ## Refactor To Repository
-The `App` component now has two concerns.  React [state management](https://en.wikipedia.org/wiki/State_management) and persistence.  State management is concerned with frontend values where persistence is a backend concern.  Persistence and data access concerns are often extracted into a [repository](https://makingloops.com/why-should-you-use-the-repository-pattern).
+
+The `App` component now has two concerns. React [state management](https://en.wikipedia.org/wiki/State_management) and persistence. State management is concerned with frontend values where persistence is a backend concern. Persistence and data access concerns are often extracted into a [repository](https://makingloops.com/why-should-you-use-the-repository-pattern).
 
 - Create a `NoteRepository.js` file in the `src` directory.
 - Move all the `localForage` calls to this new file.
+
 ```js
 import localForage from "localforage";
 
-export async function findAll(){
-    return await localForage.getItem('notes');
-};
+export async function findAll() {
+  return await localForage.getItem("notes");
+}
 
-export async function save(note){
-    const notes = await localForage.getItem('notes');
-    if(notes) 
-        await localForage.setItem('notes', [...notes, note])
-    else
-        await localForage.setItem('notes', [note])
+export async function save(note) {
+  const notes = await localForage.getItem("notes");
+  if (notes) await localForage.setItem("notes", [...notes, note]);
+  else await localForage.setItem("notes", [note]);
 }
 ```
 
 - Update `App.js` to use the new `NoteRepository` functions
+
 ```js
 async function fetchNotesCallback() {
-  const notes = await findAll()
-  if(notes)
-    setNotes(notes);
-  else
-    setNotes([])
+  const notes = await findAll();
+  if (notes) setNotes(notes);
+  else setNotes([]);
 }
 
 async function createNote() {
-  const updatedNoteList = [ ...notes, formData ];
+  const updatedNoteList = [...notes, formData];
   setNotes(updatedNoteList);
   await save(formData);
 }
 ```
+
 - Run all of the tests.
 - Green
 - Commit
@@ -1259,14 +1365,17 @@ async function createNote() {
   <summary>AWS Amplify</summary>
 
 ## AWS Amplify
-We now have a fully functioning task creation application.  When we showed this to our customer they provided quite a bit of feedback.  They would like:
-- to secure this application with a user login 
+
+We now have a fully functioning task creation application. When we showed this to our customer they provided quite a bit of feedback. They would like:
+
+- to secure this application with a user login
 - notes to show up on their mobile phone browser too
 
-While `localForage` provided a quick way to save notes and get valuable customer feedback it is not designed for securing applications or cross-device persistence.  [Amazon Web Services](https://aws.amazon.com) does provide services that solve both of these [use cases](https://en.wikipedia.org/wiki/Use_case) and positions our React app for additional possibilities like [notifications](https://aws.amazon.com/sns), backend processing, storing note attachments, and much more. [AWS Amplify](https://aws.amazon.com/amplify) provides a set of tools that significantly simplify connection web and mobile applications to an AWS backend.
+While `localForage` provided a quick way to save notes and get valuable customer feedback it is not designed for securing applications or cross-device persistence. [Amazon Web Services](https://aws.amazon.com) does provide services that solve both of these [use cases](https://en.wikipedia.org/wiki/Use_case) and positions our React app for additional possibilities like [notifications](https://aws.amazon.com/sns), backend processing, storing note attachments, and much more. [AWS Amplify](https://aws.amazon.com/amplify) provides a set of tools that significantly simplify connection web and mobile applications to an AWS backend.
 
 - Install the [Install the Amplify CLI](https://docs.amplify.aws/cli/start/install)
 - Run `amplify init` at the root of the project
+
 ```
 Project information
 | Name: tddamplifyreact
@@ -1282,9 +1391,10 @@ Project information
 Select the authentication method you want to use: AWS profile
 Please choose the profile you want to use: default
 ```
+
 - This command created the following files in your project
   - `amplify/` - This directory contains Amplify configuration files.
-  - `src/aws-exports.js` - This is file is ignored in [.gitignore](https://git-scm.com/docs/gitignore) and will not be committed to git or pushed up to GitHub.  This file will contain AWS credentials and information that should not be shared publicly.
+  - `src/aws-exports.js` - This is file is ignored in [.gitignore](https://git-scm.com/docs/gitignore) and will not be committed to git or pushed up to GitHub. This file will contain AWS credentials and information that should not be shared publicly.
 - This command created the following resources on AWS
   - UnauthRole AWS::IAM::Role
   - AuthRole AWS::IAM::Role
