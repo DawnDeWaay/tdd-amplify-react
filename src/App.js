@@ -3,7 +3,7 @@ import NoteForm from './NoteForm';
 import React, { useState, useEffect } from 'react';
 import NoteList from './NoteList';
 import Header from './Header';
-import localForage from "localforage";
+import { findAll, save } from './NoteRepository';
 
 function App() {
   const [notes, setNotes] = useState([]);
@@ -13,19 +13,18 @@ function App() {
     fetchNotesCallback();
   }, []);
 
-  function fetchNotesCallback() {
-    localForage.getItem('notes').then(function(value) {
-      if(value)
-        setNotes(value);
-      else
-        setNotes([])
-    });
+  async function fetchNotesCallback() {
+    const notes = await findAll()
+    if(notes)
+      setNotes(notes);
+    else
+      setNotes([])
   }
 
-  function createNote() {
+  async function createNote() {
     const updatedNoteList = [ ...notes, formData ];
     setNotes(updatedNoteList);
-    localForage.setItem('notes', updatedNoteList);
+    await save(formData);
   }
 
   return (

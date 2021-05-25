@@ -1159,3 +1159,46 @@ after(() => {
 - Commit
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/c73f6db0c02c4b6c12b1397b008d232ede492a98)
+
+## Refactor To Repository
+The `App` component now has two concerns.  React [state management](https://en.wikipedia.org/wiki/State_management) and persistence.  State management is concerned with frontend values where persistence is a backend concern.  Persistence and data access concerns are often extracted into a [repository](https://makingloops.com/why-should-you-use-the-repository-pattern).
+
+- Create a `NoteRepository.js` file in the `src` directory.
+- Move all the `localForage` calls to this new file.
+```js
+import localForage from "localforage";
+
+export async function findAll(){
+    return await localForage.getItem('notes');
+};
+
+export async function save(note){
+    const notes = await localForage.getItem('notes');
+    if(notes) 
+        await localForage.setItem('notes', [...notes, note])
+    else
+        await localForage.setItem('notes', [note])
+}
+```
+
+- Update `App.js` to use the new `NoteRepository` functions
+```js
+async function fetchNotesCallback() {
+  const notes = await findAll()
+  if(notes)
+    setNotes(notes);
+  else
+    setNotes([])
+}
+
+async function createNote() {
+  const updatedNoteList = [ ...notes, formData ];
+  setNotes(updatedNoteList);
+  await save(formData);
+}
+```
+- Run all of the tests.
+- Green
+- Commit
+
+[Code for this section]()
