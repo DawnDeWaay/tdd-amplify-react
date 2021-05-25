@@ -1049,3 +1049,113 @@ assert expected <input> to have value '', but the value was test note
 - Green! Commit!
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/dd2d3f0ef360e5b9a587cfab95ee61b666e6be0f)
+
+
+## Saving Notes For Real
+React creates a [single page web application](https://en.wikipedia.org/wiki/Single-page_application).  This means that the React state does not [persist](https://en.wikipedia.org/wiki/Persistence_(computer_science)) beyond a web page refresh.  In other words, if you refresh your browser page you will loose all of tasks you created.
+
+Since Cypress tests the application in a browser, this is most logical place to test this user expectation.
+
+```js
+it('should load previously saved notes on browser refresh', () => {
+    cy.reload()
+
+    cy.get('[data-testid=test-name-0]').should('have.text', 'test note');
+    cy.get('[data-testid=test-description-0]').should('have.text', 'test note description');
+})
+```
+- We now have a failing test.  In order to save notes between page reloads we will use [localforage](https://www.npmjs.com/package/localforage).
+
+- Run `npm install localforage`
+- Add a callback function to `App.js` that will lookup up notes that are saved in `localforage`
+```js
+function fetchNotesCallback() {
+  localForage.getItem('notes').then(function(value) {
+    if(value)
+      setNotes(value);
+    else
+      setNotes([])
+  });
+}
+```
+- The `if` check determines if there are any notes in `localforage` and sets the `notes` accordingly.
+
+- Add a callback function to `App.js` that will save newly created notes to `localforage`
+```js
+function createNote() {
+  const updatedNoteList = [ ...notes, formData ];
+  setNotes(updatedNoteList);
+  localForage.setItem('notes', updatedNoteList);
+}
+```
+
+- Update the `NoteForm` component in `App.js` to take the new `createNote` callback function instead of the `setNotes` hook.
+```js
+<NoteForm notes={notes}  
+  formData={formData} 
+  setFormDataCallback={setFormData} 
+  createNoteCallback={createNote}/>
+<NoteList notes={notes}/>
+```
+- Update the `NoteForm.test.js` to use the renamed parameter.
+```js
+const createNoteCallback = jest.fn();
+const setFormDataCallback = jest.fn();
+const formData = {name: '', description: ''}
+
+beforeEach(() => {
+    render(<NoteForm notes={[]} 
+            createNoteCallback={createNoteCallback}
+            setFormDataCallback={setFormDataCallback}
+            formData={formData}/>)
+});
+
+...
+
+test('should require name and description', () => {
+  ...
+  expect(createNoteCallback.mock.calls.length).toBe(0);
+});
+
+test('should require name when description provided', () => {
+    ...
+    expect(createNoteCallback.mock.calls.length).toBe(0);
+});
+
+test('should require description when name provided', () => {
+    ...
+    expect(createNoteCallback.mock.calls.length).toBe(0);
+});
+
+test('should add a new note when name and description are provided', () => {
+    ...
+    expect(createNoteCallback.mock.calls.length).toBe(1);
+});
+```
+
+- To load the saved notes when the application is loaded add the [useEffect](https://reactjs.org/docs/hooks-effect.html#example-using-hooks) hook and call the `fetchNotesCallback` in `App.js`.
+```js
+useEffect(() => {
+  fetchNotesCallback();
+}, []);
+```
+
+- Update `NoteForm.js` to use the new `createNoteCallback` parameter.
+```js
+function createNote() {
+    if (!props.formData.name || !props.formData.description) return;
+    props.createNoteCallback();
+    props.setFormDataCallback({name: '', description: ''});
+}
+```
+
+- Lastly make sure you clean up the persisted notes after the Cypress test is run.
+```js
+after(() => {
+  localForage.clear().then(() => {});
+});
+```
+- All the tests are Green
+- Commit
+
+[Code for this section]()

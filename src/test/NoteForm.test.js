@@ -1,13 +1,13 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import NoteForm from "../NoteForm";
 
-const setNotesCallback = jest.fn();
+const createNoteCallback = jest.fn();
 const setFormDataCallback = jest.fn();
 const formData = {name: '', description: ''}
 
 beforeEach(() => {
     render(<NoteForm notes={[]} 
-            setNotesCallback={setNotesCallback}
+            createNoteCallback={createNoteCallback}
             setFormDataCallback={setFormDataCallback}
             formData={formData}/>)
 });
@@ -38,7 +38,7 @@ test('should require name and description', () => {
 
     fireEvent.click(button)
 
-    expect(setNotesCallback.mock.calls.length).toBe(0);
+    expect(createNoteCallback.mock.calls.length).toBe(0);
 });
 
 test('should require name when description provided', () => {
@@ -49,7 +49,7 @@ test('should require name when description provided', () => {
 
     fireEvent.click(button);
 
-    expect(setNotesCallback.mock.calls.length).toBe(0);
+    expect(createNoteCallback.mock.calls.length).toBe(0);
 });
 
 test('should require description when name provided', () => {
@@ -60,7 +60,7 @@ test('should require description when name provided', () => {
 
     fireEvent.click(button);
 
-    expect(setNotesCallback.mock.calls.length).toBe(0);
+    expect(createNoteCallback.mock.calls.length).toBe(0);
 });
 
 test('should add a new note when name and description are provided', () => {
@@ -71,7 +71,7 @@ test('should add a new note when name and description are provided', () => {
 
     fireEvent.click(button);
 
-    expect(setNotesCallback.mock.calls.length).toBe(1);
+    expect(createNoteCallback.mock.calls.length).toBe(1);
 });
 
 test('should add a new note when name and description are provided', () => {

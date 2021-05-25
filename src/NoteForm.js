@@ -2,7 +2,7 @@ function NoteForm(props) {
 
     function createNote() {
         if (!props.formData.name || !props.formData.description) return;
-        props.setNotesCallback([ ...props.notes, props.formData ]);
+        props.createNoteCallback();
         props.setFormDataCallback({name: '', description: ''});
     }
 
