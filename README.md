@@ -1052,7 +1052,7 @@ assert expected <input> to have value '', but the value was test note
 
 
 ## Saving Notes For Real
-React creates a [single page web application](https://en.wikipedia.org/wiki/Single-page_application).  This means that the React state does not [persist](https://en.wikipedia.org/wiki/Persistence_(computer_science)) beyond a web page refresh.  In other words, if you refresh your browser page you will loose all of tasks you created.
+React creates a [single page web application](https://en.wikipedia.org/wiki/Single-page_application).  This means that the React state does not [persist](https://en.wikipedia.org/wiki/Persistence_(computer_science)) beyond a web page refresh.  In other words, if you refresh your browser page you will loose all of notes you created.
 
 Since Cypress tests the application in a browser, this is most logical place to test this user expectation.
 
@@ -1202,3 +1202,36 @@ async function createNote() {
 - Commit
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/b43be5c13819b7f429ac6efb67193e4447639e0b)
+
+## AWS Amplify
+We now have a fully functioning task creation application.  When we showed this to our customer they provided quite a bit of feedback.  They would like:
+- to secure this application with a user login 
+- notes to show up on their mobile phone browser too
+
+While `localForage` provided a quick way to save notes and get valuable customer feedback it is not designed for securing applications or cross-device persistence.  [Amazon Web Services](https://aws.amazon.com) does provide services that solve both of these [use cases](https://en.wikipedia.org/wiki/Use_case) and positions our React app for additional possibilities like [notifications](https://aws.amazon.com/sns), backend processing, storing note attachments, and much more. [AWS Amplify](https://aws.amazon.com/amplify) provides a set of tools that significantly simplify connection web and mobile applications to an AWS backend.
+
+- Install the [Install the Amplify CLI](https://docs.amplify.aws/cli/start/install)
+- Run `amplify init` at the root of the project
+```
+Project information
+| Name: tddamplifyreact
+| Environment: dev
+| Default editor: Visual Studio Code
+| App type: javascript
+| Javascript framework: react
+| Source Directory Path: src
+| Distribution Directory Path: build
+| Build Command: npm run-script build
+| Start Command: npm run-script start
+
+Select the authentication method you want to use: AWS profile
+Please choose the profile you want to use: default
+```
+- This command created the following files in your project
+  - `amplify/` - This directory contains Amplify configuration files.
+  - `src/aws-exports.js` - This is file is ignored in [.gitignore](https://git-scm.com/docs/gitignore) and will not be committed to git or pushed up to GitHub.  This file will contain AWS credentials and information that should not be shared publicly.
+- This command created the following resources on AWS
+  - UnauthRole AWS::IAM::Role
+  - AuthRole AWS::IAM::Role
+  - DeploymentBucket AWS::S3::Bucket
+  - amplify-tddamplifyreact-dev-12345
