@@ -1551,3 +1551,52 @@ afterEach(() => {
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/61a8a7ea79fe6c044379213669253eae01ae14cc)
 
 </details>
+
+<details>
+  <summary>Log Out</summary>
+
+## Log Out
+While users can now log into the notes application they can not log back out.
+
+- Add a Cypress test that will drive the production code changes
+```js
+it('should have an option to sign out', () => {
+    cy.get('[data-testid=sign-out] > .hydrated').click()
+    cy.get('amplify-auth-container.hydrated > .hydrated').should('exist')
+})
+```
+
+- Create a new component called `Footer.js` in the `src` directory
+```js
+import { AmplifySignOut } from '@aws-amplify/ui-react';
+
+function Footer() {
+    return (
+      <div data-testid="sign-out">
+        <AmplifySignOut/>
+      </div>
+    );
+  }
+  
+export default Footer;
+```
+
+- Add the new `Footer` component to the `App` component
+```js
+<div className="App">
+  <Header />
+  <NoteForm notes={notes}  
+    formData={formData} 
+    setFormDataCallback={setFormData} 
+    createNoteCallback={createNote}/>
+  <NoteList notes={notes}/>
+  <Footer />
+</div>
+```
+- Run all the tests
+- Green!
+- Commit
+
+[Code for this section]()
+
+</details>

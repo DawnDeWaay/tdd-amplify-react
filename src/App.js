@@ -5,6 +5,7 @@ import NoteList from './NoteList';
 import Header from './Header';
 import { findAll, save } from './NoteRepository';
 import { withAuthenticator } from '@aws-amplify/ui-react'
+import Footer from './Footer';
 
 function App() {
   const [notes, setNotes] = useState([]);
@@ -36,6 +37,7 @@ function App() {
         setFormDataCallback={setFormData} 
         createNoteCallback={createNote}/>
       <NoteList notes={notes}/>
+      <Footer />
     </div>
   );
 }

@@ -45,4 +45,9 @@ describe('Note Capture', () => {
         cy.get('[data-testid=test-description-0]').should('have.text', 'test note description');
         
     })
+
+    it('should have an option to sign out', () => {
+        cy.get('[data-testid=sign-out] > .hydrated').click()
+        cy.get('amplify-auth-container.hydrated > .hydrated').should('exist')
+    })
 });
