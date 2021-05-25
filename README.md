@@ -2,8 +2,10 @@
 
 In this tutorial we will [test drive](https://en.wikipedia.org/wiki/Test-driven_development) a react app. We will use [AWS Amplify](https://aws.amazon.com/amplify) to set up authentication and the backend API.
 
+<details>
+  <summary>Approach</summary>
+ 
 ## Approach
-
 Test driving an application often starts at the bottom of the [testing pyramid](https://martinfowler.com/bliki/TestPyramid.html) in [unit tests](https://en.wikipedia.org/wiki/Unit_testing). Unit tests focus on testing small units of code in isolation. However, this tutorial will start at the top of the pyramid with user interface (UI) testing. This approach is often called [Acceptance Test Driven Development](https://en.wikipedia.org/wiki/Acceptance_test%E2%80%93driven_development) (ATDD).
 
 There are a few benefits of starting at the top of the testing pyramid:
@@ -11,6 +13,10 @@ There are a few benefits of starting at the top of the testing pyramid:
 1. Quick Feedback: Demonstrate a working system to the customer faster
 1. Customer Focus: Low level code clearly ties to high level customer value
 1. System Focus: The architecture evolves and expands on green.
+</details>
+
+<details>
+  <summary>First Test</summary>
 
 ## First Test
 
@@ -268,6 +274,11 @@ Congratulations, you've successfully made an internal structural change "without
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/e6e28ce004ba0b29e2b0b7bd13adcc67965c1cfa)
 
+</details>
+
+<details>
+  <summary>NoteForm Testt</summary>
+
 ## NoteForm Test
 
 Now that we have a high-level Cypress test in place, let's move down the testing pyramid into a component test. This test will use the React Testing Library's [render](https://testing-library.com/docs/react-testing-library/cheatsheet/) function to render the `NoteForm` component and assert it's contents.
@@ -390,6 +401,11 @@ test("should display a create note button", () => {
 - Commit
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/cb3fe5136eea727e2db9c52b4a4618e09d3cc1dc)
+
+</details>
+
+<details>
+  <summary>Saving A Note</summary>
 
 ## Saving A Note
 
@@ -577,6 +593,11 @@ beforeEach(() => {
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/b9b6171a1ec15809d389d925ecc37aab629bcb1d)
 
+</details>
+
+<details>
+  <summary>Refactor - Single Responsibility</summary>
+
 ## Refactor - Single Responsibility
 > The Single Responsibility Principle (SRP) states that each software module should have one and only one reason to change. - Robert C. Martin
 
@@ -689,6 +710,11 @@ export default App;
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/8f8f00cb21ae991a253454a78a6043d38a91adfc)
 
+</details>
+
+<details>
+  <summary>Testing NoteList Component</summary>
+
 ## Testing NoteList Component
 As we refactor we need to remember what level of testing we have written within the testing pyramid.  While we have a few far reaching tests at the top of the pyramid, don't think that they adequately test the behavior of each component.  The bottom of the testing pyramid is wide because it provides broad test coverage.
 
@@ -756,6 +782,11 @@ test('should throw an exception the note array is undefined', () => {
 - Commit on Green.
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/8905e6d1e7c40c4ccc912f14bdca83fc19b68b73)
+
+</details>
+
+<details>
+  <summary>Usability</summary>
 
 ## Usability
 Customers rarely ask explicitly for a usable product.  In this application rich world that we live in it's assumed that applications will be delivered with common sense usability baked-in.  When I look at the application as it stands, a few things pop out at me.
@@ -946,6 +977,11 @@ test('should add a new note when name and description are provided', () => {
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/959bafeba3080065bbaa161825d1371b739a3973)
 
+</details>
+
+<details>
+  <summary>Reset Form</summary>
+
 ## Reset Form
 One a note is saved the name and description fields should be reset to empty strings.
 
@@ -1004,6 +1040,11 @@ function createNote() {
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/22b3132d0c71117111d82afc6f30f41d5ce93c00)
 
+</details>
+
+<details>
+  <summary>Demo Your Application To Your Customer</summary>
+
 ## Demo Your Application To Your Customer
 Be sure to start up your application and walk through it with your customers.  When I was doing this I noticed that the form is not resetting after a note is created.  This is very annoying.  In order to test drive this behavior I will add two additional assertions to the end of the UI test to verify that the form is reset.
 ```js
@@ -1050,6 +1091,10 @@ assert expected <input> to have value '', but the value was test note
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/dd2d3f0ef360e5b9a587cfab95ee61b666e6be0f)
 
+</details>
+
+<details>
+  <summary>Saving Notes For Real</summary>
 
 ## Saving Notes For Real
 React creates a [single page web application](https://en.wikipedia.org/wiki/Single-page_application).  This means that the React state does not [persist](https://en.wikipedia.org/wiki/Persistence_(computer_science)) beyond a web page refresh.  In other words, if you refresh your browser page you will loose all of notes you created.
@@ -1160,6 +1205,11 @@ after(() => {
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/c73f6db0c02c4b6c12b1397b008d232ede492a98)
 
+</details>
+
+<details>
+  <summary>Refactor To Repository</summary>
+
 ## Refactor To Repository
 The `App` component now has two concerns.  React [state management](https://en.wikipedia.org/wiki/State_management) and persistence.  State management is concerned with frontend values where persistence is a backend concern.  Persistence and data access concerns are often extracted into a [repository](https://makingloops.com/why-should-you-use-the-repository-pattern).
 
@@ -1203,6 +1253,11 @@ async function createNote() {
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/b43be5c13819b7f429ac6efb67193e4447639e0b)
 
+</details>
+
+<details>
+  <summary>AWS Amplify</summary>
+
 ## AWS Amplify
 We now have a fully functioning task creation application.  When we showed this to our customer they provided quite a bit of feedback.  They would like:
 - to secure this application with a user login 
@@ -1237,3 +1292,5 @@ Please choose the profile you want to use: default
   - amplify-tddamplifyreact-dev-12345
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/67a864c2e51f26aaa95d50abd83510e6c2b52b6c)
+
+</details>
