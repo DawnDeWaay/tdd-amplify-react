@@ -1362,9 +1362,9 @@ async function createNote() {
 </details>
 
 <details>
-  <summary>AWS Amplify</summary>
+  <summary>Set Up AWS Amplify</summary>
 
-## AWS Amplify
+## Set Up AWS Amplify
 
 We now have a fully functioning task creation application. When we showed this to our customer they provided quite a bit of feedback. They would like:
 
