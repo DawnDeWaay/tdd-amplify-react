@@ -1235,3 +1235,5 @@ Please choose the profile you want to use: default
   - AuthRole AWS::IAM::Role
   - DeploymentBucket AWS::S3::Bucket
   - amplify-tddamplifyreact-dev-12345
+
+[Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/67a864c2e51f26aaa95d50abd83510e6c2b52b6c)
