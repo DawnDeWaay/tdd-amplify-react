@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import NoteList from './NoteList';
 import Header from './Header';
 import { findAll, save } from './NoteRepository';
+import { withAuthenticator } from '@aws-amplify/ui-react'
 
 function App() {
   const [notes, setNotes] = useState([]);
@@ -39,4 +40,4 @@ function App() {
   );
 }
 
-export default App;
+export default withAuthenticator(App)

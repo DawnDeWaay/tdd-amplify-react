@@ -1404,3 +1404,150 @@ Please choose the profile you want to use: default
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/67a864c2e51f26aaa95d50abd83510e6c2b52b6c)
 
 </details>
+
+<details>
+  <summary>Add Authentication</summary>
+
+## Add Authentication
+- Run `npm install aws-amplify @aws-amplify/ui-react`
+- Run `amplify add auth` at the root of your project
+```
+Do you want to use the default authentication and security configuration? Default configuration
+How do you want users to be able to sign in? Username
+Do you want to configure advanced settings? No, I am done.
+```
+
+- Run `amplify push`
+```
+Are you sure you want to continue? (Y/n): Y
+```
+- This command created the following resources on AWS
+  - UpdateRolesWithIDPFunctionRole AWS::IAM::Role
+  - SNSRole AWS::IAM::Role
+  - UserPool AWS::Cognito::UserPool
+  - UserPoolClientWeb AWS::Cognito::UserPoolClient
+  - UserPoolClient AWS::Cognito::UserPoolClient
+  - UserPoolClientRole AWS::IAM::Role
+  - UserPoolClientLambda AWS::Lambda::Function
+  - UserPoolClientLambdaPolicy AWS::IAM::Policy
+  - UserPoolClientLogPolicy AWS::IAM::Policy
+  - UserPoolClientInputs Custom::LambdaCallout
+  - IdentityPool AWS::Cognito::IdentityPool
+  - IdentityPoolRoleMap AWS::Cognito::IdentityPoolRoleAttachment
+  - amplify-tddamplifyreact-dev-12345-authtddamplifyreactxx123x12-1XXXXX1XXX1XX
+  - authtddamplifyreactxx123x12 AWS::CloudFormation::Stack
+  - UpdateRolesWithIDPFunction AWS::Lambda::Function
+  - UpdateRolesWithIDPFunctionOutputs Custom::LambdaCallout
+  - amplify-tddamplifyreact-dev-12345 AWS::CloudFormation::Stack
+
+- Add the following just under the imports in the `src/index.js` file
+```js
+import Amplify from 'aws-amplify';
+import config from './aws-exports';
+
+Amplify.configure(config);
+```
+- Add `import { withAuthenticator } from '@aws-amplify/ui-react'` to the `App` component
+- Replace `export default App;` at the bottom of `App.js` with `export default withAuthenticator(App)`
+- Run `npm start`
+
+- Open http://localhost:3000
+- Click the `Create account` link
+- Create and Verify your new account
+- Login to your App
+
+- Run all your tests
+- While the non-UI tests pass, the Cypress tests are **Red**.
+
+### Cypress Login
+The Cypress tests now need to log in to the notes app.
+
+- Run `npm install cypress-localstorage-commands`
+- Add the following to the bottom of the `cypress/support/commands.js` file
+```js
+const Auth = require ( "aws-amplify" ).Auth;
+import "cypress-localstorage-commands"; 
+const username = Cypress.env("username"); 
+const password = Cypress.env("password"); 
+const userPoolId = Cypress.env("userPoolId"); 
+const clientId = Cypress.env ("clientId");
+
+const awsconfig = { 
+  aws_user_pools_id: userPoolId, 
+  aws_user_pools_web_client_id: clientId, 
+}; 
+Auth. configure (awsconfig) ;
+
+Cypress.Commands.add("signIn", () => {
+
+    cy.then(() => Auth.signIn(username, password)).then((cognitoUser) => {
+      const idToken = cognitoUser.signInUserSession.idToken.jwtToken;
+      const accessToken = cognitoUser.signInUserSession.accessToken.jwtToken;
+  
+      const makeKey = (name) => `CognitoIdentityServiceProvider
+        .${cognitoUser.pool.clientId}
+        .${cognitoUser.username}.${name}`;
+  
+      cy.setLocalStorage(makeKey("accessToken"), accessToken);
+      cy.setLocalStorage(makeKey("idToken"), idToken);
+      cy.setLocalStorage(
+        `CognitoIdentityServiceProvider.${cognitoUser.pool.clientId}.LastAuthUser`,
+        cognitoUser.username
+      );
+    });
+    cy.saveLocalStorage();
+  });
+```
+
+- Create a new file at the root of your project named `cypress.env.json` with the following content
+```json
+{ 
+    "username": "[Login username you just created]", 
+    "password": "[Login password you just created]", 
+    "userPoolId": "[The `aws_user_pools_id` value found in your `src/aws-exports.js`]", 
+    "clientId": "[The `aws_user_pools_web_client_id` value found in your `src/aws-exports.js`]" 
+}
+```
+
+- Add the `cypress.env.json` to `.gitignore` so that it will not be committed and pushed to GitHub
+```
+#amplify
+amplify/\#current-cloud-backend
+...
+amplifyconfiguration.dart
+amplify-build-config.json
+amplify-gradle-config.json
+amplifytools.xcconfig
+.secret-*
+cypress.env.json
+```
+
+- Add the following set ups and tear downs to `cypress/integration/note.spec.js`
+```js
+before(() => {
+  cy.signIn();
+});
+
+after(() => {
+  cy.clearLocalStorageSnapshot();
+  cy.clearLocalStorage();
+  localForage.clear();
+});
+
+beforeEach(() => {
+  cy.restoreLocalStorage();
+  cy.visit('/');
+});
+
+afterEach(() => {
+  cy.saveLocalStorage();
+});
+```
+
+- Rerun all of your test.
+- Green!
+- Commit
+
+[Code for this section]()
+
+</details>

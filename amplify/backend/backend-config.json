@@ -1,1 +1,10 @@
-{}
+{
+  "auth": {
+    "tddamplifyreact03a8d725": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  }
+}

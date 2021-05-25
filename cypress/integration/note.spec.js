@@ -2,11 +2,22 @@ import localForage from "localforage";
 
 describe('Note Capture', () => {
     before(() => {
+        cy.signIn();
+    });
+    
+    after(() => {
+        cy.clearLocalStorageSnapshot();
+        cy.clearLocalStorage();
+        localForage.clear();
+    });
+    
+    beforeEach(() => {
+        cy.restoreLocalStorage();
         cy.visit('/');
     });
-
-    after(() => {
-        localForage.clear();
+    
+    afterEach(() => {
+        cy.saveLocalStorage();
     });
 
     it('should have header', () => {
