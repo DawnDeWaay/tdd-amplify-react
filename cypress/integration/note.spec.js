@@ -1,5 +1,3 @@
-import localForage from "localforage";
-
 describe('Note Capture', () => {
     before(() => {
         cy.signIn();
@@ -8,7 +6,6 @@ describe('Note Capture', () => {
     after(() => {
         cy.clearLocalStorageSnapshot();
         cy.clearLocalStorage();
-        localForage.clear();
     });
     
     beforeEach(() => {

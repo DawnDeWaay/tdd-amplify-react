@@ -1417,10 +1417,8 @@ How do you want users to be able to sign in? Username
 Do you want to configure advanced settings? No, I am done.
 ```
 
-- Run `amplify push`
-```
-Are you sure you want to continue? (Y/n): Y
-```
+- Run `amplify push --y`
+
 - This command created the following resources on AWS
   - UpdateRolesWithIDPFunctionRole AWS::IAM::Role
   - SNSRole AWS::IAM::Role
@@ -1598,5 +1596,105 @@ export default Footer;
 - Commit
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/22f23e1bc263d175dc699450e136a58e341b8fa2)
+
+</details>
+
+<details>
+  <summary>Backend API</summary>
+
+## Backend API
+Now that we have user authentication hooked up we need to add the ability for customer to get their "notes to show up on their mobile phone browser too".  This means that we can not use local storage on the user's computer anymore.  Instead we need to build backend [API](https://en.wikipedia.org/wiki/API) that will store notes independently from the frontend code.
+
+- Run `amplify add api` at the root of your project
+```
+Please select from one of the below mentioned services: GraphQL
+Provide API name: tddamplifyreact
+Choose the default authorization type for the API API key
+Enter a description for the API key: notes-api-key
+After how many days from now the API key should expire (1-365): 7
+Do you want to configure advanced settings for the GraphQL API No, I am done.
+Do you have an annotated GraphQL schema? No
+Choose a schema template: Single object with fields (e.g., “Todo” with ID, name, description)
+Do you want to edit the schema now? Yes
+```
+- [GraphQL](https://graphql.org/) is an alternative to [REST](Representational state transfer).  GraphQL APIs are more flexible than REST APIs.
+- This command created
+  - `amplify/backend/api/`
+  - `amplify/backend/backend-config.json`
+
+- Run `amplify push --y`
+
+- This command created/updated the following resources on AWS
+  - authtddamplifyreact05a4d123 AWS::CloudFormation::Stack
+  - GraphQLAPI AWS::AppSync::GraphQLApi
+  - GraphQLAPIKey AWS::AppSync::ApiKey
+  - GraphQLSchema AWS::AppSync::GraphQLSchema
+  - NoteIAMRole AWS::IAM::Role
+  - NoteDataSource AWS::AppSync::DataSource
+  - ListNoteResolver AWS::AppSync::Resolver
+  - CreateNoteResolver AWS::AppSync::Resolver
+  - UpdateNoteResolver AWS::AppSync::Resolver
+  - DeleteNoteResolver AWS::AppSync::Resolver
+  - GetNoteResolver AWS::AppSync::Resolver
+  - NoteTable AWS::DynamoDB::Table
+  - amplify-tddamplifyreact-dev-121349-apitddamplifyreact-Z2AW8DQHJ787-Note-1FT5A8I4PYJH1 AWS::CloudFormation::Stack
+  - Note AWS::CloudFormation::Stack
+  - amplify-tddamplifyreact-dev-151647-apitddamplifyreact-Z2AW8DQHJ787-CustomResourcesjson-GB5TRK4AKZAU AWS::CloudFormation::Stack
+  - CustomResourcesjson AWS::CloudFormation::Stack
+  - amplify-tddamplifyreact-dev-151647-apitddamplifyreact-Z2AW8DQHJ787 AWS::CloudFormation::Stack
+  - apitddamplifyreact AWS::CloudFormation::Stack
+  - authtddamplifyreact03a1d234 AWS::CloudFormation::Stack
+  - amplify-tddamplifyreact-dev-121349 AWS::CloudFormation::Stack
+
+### Cut Over Repository To Use GraphQL
+Now that we have a GraphQL API that is storing our notes in a [DynamoDB](https://aws.amazon.com/dynamodb) table we can replace `localforage` calls with GraphQL API calls.
+
+- Replace `localforage` calls in the `NoteRepository` with GraphQL API calls
+```js
+import { API } from 'aws-amplify';
+import { listNotes } from './graphql/queries';
+import { createNote as createNoteMutation} from './graphql/mutations';
+
+export async function findAll(){
+    const apiData = await API.graphql({ query: listNotes });
+    return apiData.data.listNotes.items;
+};
+
+export async function save(note){
+    const apiData = await API.graphql({ query: createNoteMutation, variables: { input: note } });
+    return apiData.data.createNote;
+}
+```
+
+- We do need to call save first in the `createNote` callback function in the `App` component because when GraphQL saves a note it generates a unique `ID` that we want to have access to in our `note` array.
+```js
+async function createNote() {
+  const newNote = await save(formData);
+  const updatedNoteList = [ ...notes, newNote ];
+  setNotes(updatedNoteList); 
+}
+```
+
+- The final place that we need to remove `localforage` is in the `note.spec.js` Cypress test.  GraphQL does not provide an equivalent API endpoint to delete all of the notes so we will not be able to simply replace the `localforage.clear()` function call with a GraphQL one.  In a separate commit we will added the ability to delete notes by `ID` through the UI.  This is a [mutation](https://graphql.org/learn/queries/#mutations) that GraphQL provides.  But for now we will just remove the clean up in the Cypress test.
+```js
+describe('Note Capture', () => {
+  before(() => {
+      cy.signIn();
+  });
+  
+  after(() => {
+      cy.clearLocalStorageSnapshot();
+      cy.clearLocalStorage();
+  });
+  ...
+```
+
+- Finally remove `localforage` by running `npm uninstall localforage`
+
+- Rerun all of the tests
+- Green!
+- Commit
+
+[Code for this section]()
 
 </details>
