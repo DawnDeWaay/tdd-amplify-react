@@ -24,9 +24,9 @@ function App() {
   }
 
   async function createNote() {
-    const updatedNoteList = [ ...notes, formData ];
-    setNotes(updatedNoteList);
-    await save(formData);
+    const newNote = await save(formData);
+    const updatedNoteList = [ ...notes, newNote ];
+    setNotes(updatedNoteList); 
   }
 
   return (
