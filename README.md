@@ -1695,6 +1695,6 @@ describe('Note Capture', () => {
 - Green!
 - Commit
 
-[Code for this section]()
+[Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/f6ee8a279908c49d6d03ccb7f209b4833832c1e6)
 
 </details>
