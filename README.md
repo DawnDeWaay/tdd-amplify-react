@@ -975,6 +975,7 @@ test('should require name and description', () => {
     expect(setNotesCallback.mock.calls.length).toBe(0);
 });
 ```
+- **When `...` is on a line by itself in a code example it means that I hav not provided all of the code from that file.  Please be careful to copy each section that is separated by `...`'s and use them in the appropriate part of your files.**
 
 - This test checks to see if the jest [mock function](https://jestjs.io/docs/mock-functions) was called. In this test the note's name and description are blank so a new note should not be created and added to the list of notes.
 - We have a failing test.
@@ -1756,5 +1757,70 @@ async function deleteNoteCallback( id ) {
 - Commit
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/c17100754bf3a9edfebfeb8219b87766fb1cde00)
+
+</details>
+
+<details>
+  <summary>Note List Component Testing</summary>
+
+## Note List Component Testing
+Since we started at the top of the testing pyramid we need to make sure, once we are on green, that we work our way down to lower level tests too.
+
+- Add a test to `NoteList.test.js` to verify the deletion behavior of the `NoteList` component.
+```js
+import { render, screen, fireEvent } from '@testing-library/react';
+import NoteList from '../NoteList';
+
+const deleteNoteCallback = jest.fn();
+
+const defaultProps = { 
+    notes: [],
+    deleteNoteCallback: deleteNoteCallback
+ };
+  
+const setup = (props = {}) => {
+    const setupProps = { ...defaultProps, ...props};
+    return render(<NoteList {...setupProps}/>);
+};
+
+test('should display nothing when no notes are provided', () => {
+    setup();
+...
+});
+
+test('should display one note when one notes is provided', () => {
+    const note = {name: 'test name', description: 'test description'}
+    setup({notes: [note]});
+...
+});
+
+test('should display one note when one notes is provided', () => {
+    const firstNote = {name: 'test name 1', description: 'test description 1'}
+    const secondNote = {name: 'test name 1', description: 'test description 1'}
+    setup({notes: [firstNote, secondNote]});
+...
+});
+
+test('should delete note when clicked', () => {
+    const note = {
+        id: 1,
+        name: 'test name 1',
+        description: 'test description 1'
+    }
+    const notes = [ note ]
+    setup({notes: notes});
+    const button = screen.getByTestId('test-button-0');
+
+    fireEvent.click(button)
+
+    expect(deleteNoteCallback.mock.calls.length).toBe(1);
+    expect(deleteNoteCallback.mock.calls[0][0]).toStrictEqual(1);
+});
+```
+- I added a mock function for the `deleteNoteCallback` and a `setup` function that has properties that can be overridden for specific test cases.  This is a pattern that is often used in this style of tests.
+
+- Run all of the tests
+- Green
+- Commit
 
 </details>
