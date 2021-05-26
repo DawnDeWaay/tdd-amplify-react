@@ -1755,6 +1755,6 @@ async function deleteNoteCallback( id ) {
 - Green
 - Commit
 
-[Code for this section]()
+[Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/c17100754bf3a9edfebfeb8219b87766fb1cde00)
 
 </details>
