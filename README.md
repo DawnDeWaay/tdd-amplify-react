@@ -1885,6 +1885,6 @@ it('should delete note by id', () => {
 - Green!
 - Commit
 
-[Code for this section]()
+[Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/00f9b6c36f94cbf19fe79a6107eccad3b3faa462)
 
 </details>
