@@ -1826,3 +1826,65 @@ test('should delete note when clicked', () => {
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/f9c91554f4256a05d7c94756cbf4495edc855e36)
 
 </details>
+
+<details>
+  <summary>Unit Testing Note Repository</summary>
+
+## Unit Testing Note Repository
+[Unit testing](https://en.wikipedia.org/wiki/Unit_testing) is the lowest level testing that tests out a single function in complete isolation.  For the `NoteRepository` this means that amplify and GraphQL imports will need to be [mocked](https://en.wikipedia.org/wiki/Mock_object) out so that we do not hit AWS during our testing.
+
+- Create a new test called `NoteRepository.test.js` file under the `src/test/` directory.
+```js
+import { save, findAll, deleteById} from '../NoteRepository';
+import { API } from 'aws-amplify';
+import { createNote as createNoteMutation, deleteNote as deleteNoteMutation} from '../graphql/mutations';
+import { listNotes } from '../graphql/queries';
+
+
+const mockGraphql = jest.fn();
+const id = 'test-id'
+
+beforeEach(() => {
+    API.graphql = mockGraphql
+});
+
+afterEach(() => {
+    jest.clearAllMocks()
+});
+
+it('should create a new note', () => {
+    const note = {name: 'test name', description: 'test description'}
+
+    save(note)
+
+    expect(mockGraphql.mock.calls.length).toBe(1);
+    expect(mockGraphql.mock.calls[0][0]).toStrictEqual(
+        { query: createNoteMutation, variables: { input: note } }
+    );
+})
+
+it('should findAll notes', () => {
+    const note = {name: 'test name', description: 'test description'}
+
+    findAll(note)
+
+    expect(mockGraphql.mock.calls.length).toBe(1);
+    expect(mockGraphql.mock.calls[0][0]).toStrictEqual({ query: listNotes });
+})
+
+it('should delete note by id', () => {
+    deleteById(id)
+
+    expect(mockGraphql.mock.calls.length).toBe(1);
+    expect(mockGraphql.mock.calls[0][0]).toStrictEqual({ query: deleteNoteMutation, variables: { input: { id } }});
+})
+```
+- In the `beforeEach` function the real `API.graphql` function is replaced with a mock function.  This enables us to test this script in complete isolation.  We can determine how many times the mock function was called and what parameters were passed to that function.  This also keeps this test from trying to call AWS.  This would make the test much slower and more fragile.  Remember that unit tests are tests at the bottom of the testing pyramid which are faster and easier to maintain.
+
+- Run all of your tests
+- Green!
+- Commit
+
+[Code for this section]()
+
+</details>
