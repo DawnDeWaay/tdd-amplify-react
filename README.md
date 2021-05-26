@@ -1698,3 +1698,63 @@ describe('Note Capture', () => {
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/f6ee8a279908c49d6d03ccb7f209b4833832c1e6)
 
 </details>
+
+<details>
+  <summary>Add Note Deletion</summary>
+
+## Add Note Deletion
+In order to add note deletion, let's drive this from the Cypress test.  This will help in cleaning up notes that were created during the UI test.
+
+- Add a deletion test to the Cypress test
+```js
+it('should delete note', () => {
+  cy.get('[data-testid=test-button-0]').click();
+
+  cy.get('[data-testid=test-name-0]').should('not.exist')
+  cy.get('[data-testid=test-description-0]').should('not.exist')
+})
+```
+- Run the Cypress test and verify that it Fails 
+
+- To make it go green, add a new deletion function to `NoteRepository.js`
+```js
+...
+import { createNote as createNoteMutation, deleteNote as deleteNoteMutation} from './graphql/mutations';
+
+...
+
+export async function deleteById( id ) {
+  return await API.graphql({ query: deleteNoteMutation, variables: { input: { id } }});
+}
+```
+
+- Create a new deletion callback function in `App.js`
+```js
+async function deleteNoteCallback( id ) {
+  const newNotesArray = notes.filter(note => note.id !== id);
+  setNotes(newNotesArray);
+  await deleteById(id);
+}
+```
+
+- Pass the `deleteNoteCallback` callback function parameter to the `NoteList` component.
+```js
+<NoteList notes={notes}
+  deleteNoteCallback={deleteNoteCallback}/>
+```
+
+- Add a deletion button to the `NoteList` component
+```js
+<button 
+    data-testid={'test-button-' + index}
+    onClick={() => props.deleteNoteCallback(note.id)}>
+    Delete note
+</button>
+```
+- Run all the tests
+- Green
+- Commit
+
+[Code for this section]()
+
+</details>

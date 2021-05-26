@@ -43,6 +43,13 @@ describe('Note Capture', () => {
         
     })
 
+    it('should delete note', () => {
+        cy.get('[data-testid=test-button-0]').click();
+
+        cy.get('[data-testid=test-name-0]').should('not.exist')
+        cy.get('[data-testid=test-description-0]').should('not.exist')
+    })
+
     it('should have an option to sign out', () => {
         cy.get('[data-testid=sign-out] > .hydrated').click()
         cy.get('amplify-auth-container.hydrated > .hydrated').should('exist')

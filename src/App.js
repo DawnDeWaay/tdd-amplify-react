@@ -3,7 +3,7 @@ import NoteForm from './NoteForm';
 import React, { useState, useEffect } from 'react';
 import NoteList from './NoteList';
 import Header from './Header';
-import { findAll, save } from './NoteRepository';
+import { findAll, save, deleteById } from './NoteRepository';
 import { withAuthenticator } from '@aws-amplify/ui-react'
 import Footer from './Footer';
 
@@ -29,6 +29,13 @@ function App() {
     setNotes(updatedNoteList); 
   }
 
+
+  async function deleteNoteCallback( id ) {
+    const newNotesArray = notes.filter(note => note.id !== id);
+    setNotes(newNotesArray);
+    await deleteById(id);
+  }
+
   return (
     <div className="App">
       <Header />
@@ -36,7 +43,8 @@ function App() {
         formData={formData} 
         setFormDataCallback={setFormData} 
         createNoteCallback={createNote}/>
-      <NoteList notes={notes}/>
+      <NoteList notes={notes}
+        deleteNoteCallback={deleteNoteCallback}/>
       <Footer />
     </div>
   );
