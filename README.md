@@ -2078,3 +2078,149 @@ It's best to organize your code into a logical [folder structure](https://reactj
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/6a580689ebf3805b1a167efbd2fa510491af2527)
 
 </details>
+
+<details>
+  <summary>Styling The App</summary>
+
+## Styling The App
+
+Right now this Notes Application is functional but it is not very pretty. The [Bootstrap](https://getbootstrap.com) library not only provides a simple way to provide a consistent look-and-feel, it also provides a [responsive web](https://en.wikipedia.org/wiki/Responsive_web_design) experience right out-of-the-box.
+
+- Run `npm install react-bootstrap bootstrap@4.6.0` at the root of your project
+- The [React Bootstrap](https://react-bootstrap.github.io) library combines [Bootstrap Components](https://getbootstrap.com/docs/5.0/customize/components) with React Components.
+
+- Add the [Cascading Style Sheet](https://en.wikipedia.org/wiki/CSS) provided by Bootstrap's [CDN](https://en.wikipedia.org/wiki/Content_delivery_network) to the `index.js` file.
+
+```js
+ReactDOM.render(
+  <React.StrictMode>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+      integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+      crossorigin="anonymous"
+    />
+    <App />
+  </React.StrictMode>,
+  document.getElementById("root")
+);
+```
+
+- Remove all of the contents of `App.css` because it will no longer be used in the application.
+
+- Add a Bootstrap React [Grid System](https://react-bootstrap.github.io/layout/grid) to `App.js`
+```js
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
+...
+
+return (
+<Container>
+  <Row>
+    <Col md={6}>
+      <Header />
+    </Col>
+  </Row>
+  <Row>
+    <Col  md={6}>
+    <NoteForm notes={notes}  
+      formData={formData} 
+      setFormDataCallback={setFormData} 
+      createNoteCallback={createNote}/>
+    </Col>
+  </Row>
+  <Row>
+    <Col md={6}>
+      <NoteList notes={notes}
+        deleteNoteCallback={deleteNoteCallback}/>
+    </Col>
+  </Row>
+  <Row>
+    <Col md={6}>
+      <Footer />
+    </Col>
+  </Row>
+</Container>
+);
+```
+
+- Add a Bootstrap React [Form](https://react-bootstrap.github.io/components/forms) to `NoteForm.js`
+```js
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+
+...
+
+return (
+    <Form>
+        <Form.Group>
+            <Form.Control data-testid="note-name-field" 
+                onChange={e => props.setFormDataCallback({ 
+                    ...props.formData, 
+                    'name': e.target.value}
+                )}
+                value={props.formData.name}
+                placeholder="Note Name"/>
+        </Form.Group>
+        <Form.Group>
+            <Form.Control data-testid="note-description-field" 
+                as="textarea" 
+                onChange={e => props.setFormDataCallback({ 
+                    ...props.formData, 
+                    'description': e.target.value}
+                )}
+                value={props.formData.description}
+                placeholder="Note Description"/>
+        </Form.Group>
+        <Form.Group>
+            <Button data-testid="note-form-submit"
+                onClick={createNote}>
+                Create Note
+            </Button>
+        </Form.Group> 
+    </Form> 
+);
+```
+
+- Add a Bootstrap React [Card](https://react-bootstrap.github.io/components/cards) to `NoteList.js`
+```js
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card'
+
+...
+
+return (
+  <div>
+    {
+        props.notes.map((note, index) => (
+            <div key={'note-' + index}>
+              <Card>
+                <Card.Header data-testid={"test-name-" + index}>{note.name}</Card.Header>
+                <Card.Body>
+                  <Card.Text data-testid={"test-description-" + index}>
+                    {note.description}
+                  </Card.Text>
+                  <Button variant="secondary" 
+                    data-testid={'test-button-' + index}
+                    onClick={() => props.deleteNoteCallback(note.id)}>
+                      Delete note
+                  </Button>
+                </Card.Body>
+              </Card>
+              <br />
+            </div>
+        ))
+    } 
+  </div>
+);
+```
+
+- Run all of the tests
+- Green
+- Commit
+
+[Code for this section]()
+
+</details>

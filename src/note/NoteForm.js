@@ -1,3 +1,6 @@
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+
 function NoteForm(props) {
 
     function createNote() {
@@ -7,26 +10,33 @@ function NoteForm(props) {
     }
 
     return (
-        <div>
-            <input data-testid="note-name-field" 
-                onChange={e => props.setFormDataCallback({ 
-                    ...props.formData, 
-                    'name': e.target.value}
-                )}
-                value={props.formData.name}
-                placeholder="Note Name"/>
-            <input data-testid="note-description-field" 
-                onChange={e => props.setFormDataCallback({ 
-                    ...props.formData, 
-                    'description': e.target.value}
-                )}
-                value={props.formData.description}
-                placeholder="Note Description"/>
-            <button data-testid="note-form-submit"
-                onClick={createNote}>
-                Create Note
-            </button> 
-        </div> 
+        <Form>
+            <Form.Group>
+                <Form.Control data-testid="note-name-field" 
+                    onChange={e => props.setFormDataCallback({ 
+                        ...props.formData, 
+                        'name': e.target.value}
+                    )}
+                    value={props.formData.name}
+                    placeholder="Note Name"/>
+            </Form.Group>
+            <Form.Group>
+                <Form.Control data-testid="note-description-field" 
+                    as="textarea" 
+                    onChange={e => props.setFormDataCallback({ 
+                        ...props.formData, 
+                        'description': e.target.value}
+                    )}
+                    value={props.formData.description}
+                    placeholder="Note Description"/>
+            </Form.Group>
+            <Form.Group>
+                <Button data-testid="note-form-submit"
+                    onClick={createNote}>
+                    Create Note
+                </Button>
+            </Form.Group> 
+        </Form> 
     );
 }
   
