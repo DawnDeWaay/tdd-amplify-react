@@ -58,6 +58,8 @@ The user story and acceptance criteria above describe a desired customer outcome
 ```
 
 - Run `npx cypress open` to Open Cypress
+- Run one or two of the Cypress `examples` to make sure everything is set up correctly.
+- **Once you have verified that Cypress is running correctly, delete the `cypress/integration/examples/` directory so that your tests will run faster on your [Continuous Integration (CI) Server](https://en.wikipedia.org/wiki/Continuous_integration).**
 - Create a new test called `note.spec.js` under the `cypress\integration\` directory in your project
 - Write your first test with intent revealing names.
 
@@ -1548,6 +1550,28 @@ afterEach(() => {
 - Commit
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/61a8a7ea79fe6c044379213669253eae01ae14cc)
+
+</details>
+
+<details>
+  <summary>Notes App Deployment</summary>
+
+## Notes App Deployment
+Amplify provides the ability to [deploy](https://docs.amplify.aws/guides/hosting/git-based-deployments/q/platform/js), build, run tests and host your application ([Continuous Delivery](https://en.wikipedia.org/wiki/Continuous_delivery))
+
+- If you have not already, [create](https://docs.github.com/en/github/getting-started-with-github/signing-up-for-github/signing-up-for-a-new-github-account) a GitHub account
+- Be sure to [push](https://docs.github.com/en/github/importing-your-projects-to-github/importing-source-code-to-github/adding-an-existing-project-to-github-using-the-command-line) your local changes up to your GitHub account
+
+- Log In to your http://console.aws.amazon.com
+- Open `AWS Amplify`
+- Open the backend that you just pushed up (`amplify push --y`).
+- Open the `Frontend environments` tab
+- Select `GitHub` and `Connect branch`
+- Connect Amplify with your GitHub account
+- Select the GitHub repository where your code is stored
+- Complete the set up, save and deploy.
+
+
 
 </details>
 
