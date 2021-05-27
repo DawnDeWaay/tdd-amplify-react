@@ -1668,7 +1668,7 @@ jobs:
 
 - Green!
 
-[Code for this section]()
+[Code for this section](https://github.com/pairing4good/tdd-amplify-react/compare/5a3004bbf51ca2eb45db09e2edb8c01fd7f2c421..0aab5724181184a5327e025b0a26400eb722e3dd)
 
 </details>
 
