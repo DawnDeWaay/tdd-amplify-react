@@ -1659,8 +1659,14 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+<<<<<<< HEAD
       - run: npm install
       - run: npm run test
+=======
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm test
+>>>>>>> cab85dafb93ccf66fc91083e3063dbe9440df23f
 ```
 
 - Commit and Push
