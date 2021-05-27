@@ -1,4 +1,4 @@
-import { save, findAll, deleteById} from '../NoteRepository';
+import { save, findAll, deleteById} from '../common/NoteRepository';
 import { API } from 'aws-amplify';
 import { createNote as createNoteMutation, deleteNote as deleteNoteMutation} from '../graphql/mutations';
 import { listNotes } from '../graphql/queries';

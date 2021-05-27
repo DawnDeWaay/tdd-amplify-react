@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import NoteForm from "../NoteForm";
+import NoteForm from "../note/NoteForm";
 
 const createNoteCallback = jest.fn();
 const setFormDataCallback = jest.fn();

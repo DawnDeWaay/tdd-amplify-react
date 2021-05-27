@@ -1,9 +1,9 @@
-import './App.css';
+import '../App.css';
 import NoteForm from './NoteForm';
 import React, { useState, useEffect } from 'react';
 import NoteList from './NoteList';
 import Header from './Header';
-import { findAll, save, deleteById } from './NoteRepository';
+import { findAll, save, deleteById } from '../common/NoteRepository';
 import { withAuthenticator } from '@aws-amplify/ui-react'
 import Footer from './Footer';
 
