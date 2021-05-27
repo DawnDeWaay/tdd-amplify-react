@@ -977,7 +977,8 @@ test('should require name and description', () => {
     expect(setNotesCallback.mock.calls.length).toBe(0);
 });
 ```
-- **When `...` is on a line by itself in a code example it means that I hav not provided all of the code from that file.  Please be careful to copy each section that is separated by `...`'s and use them in the appropriate part of your files.**
+
+- **When `...` is on a line by itself in a code example it means that I hav not provided all of the code from that file. Please be careful to copy each section that is separated by `...`'s and use them in the appropriate part of your files.**
 
 - This test checks to see if the jest [mock function](https://jestjs.io/docs/mock-functions) was called. In this test the note's name and description are blank so a new note should not be created and added to the list of notes.
 - We have a failing test.
@@ -1412,8 +1413,10 @@ Please choose the profile you want to use: default
   <summary>Add Authentication</summary>
 
 ## Add Authentication
+
 - Run `npm install aws-amplify @aws-amplify/ui-react`
 - Run `amplify add auth` at the root of your project
+
 ```
 Do you want to use the default authentication and security configuration? Default configuration
 How do you want users to be able to sign in? Username
@@ -1423,6 +1426,7 @@ Do you want to configure advanced settings? No, I am done.
 - Run `amplify push --y`
 
 - This command created the following resources on AWS
+
   - UpdateRolesWithIDPFunctionRole AWS::IAM::Role
   - SNSRole AWS::IAM::Role
   - UserPool AWS::Cognito::UserPool
@@ -1442,12 +1446,14 @@ Do you want to configure advanced settings? No, I am done.
   - amplify-tddamplifyreact-dev-12345 AWS::CloudFormation::Stack
 
 - Add the following just under the imports in the `src/index.js` file
+
 ```js
-import Amplify from 'aws-amplify';
-import config from './aws-exports';
+import Amplify from "aws-amplify";
+import config from "./aws-exports";
 
 Amplify.configure(config);
 ```
+
 - Add `import { withAuthenticator } from '@aws-amplify/ui-react'` to the `App` component
 - Replace `export default App;` at the bottom of `App.js` with `export default withAuthenticator(App)`
 - Run `npm start`
@@ -1461,56 +1467,59 @@ Amplify.configure(config);
 - While the non-UI tests pass, the Cypress tests are **Red**.
 
 ### Cypress Login
+
 The Cypress tests now need to log in to the notes app.
 
 - Run `npm install cypress-localstorage-commands`
 - Add the following to the bottom of the `cypress/support/commands.js` file
-```js
-const Auth = require ( "aws-amplify" ).Auth;
-import "cypress-localstorage-commands"; 
-const username = Cypress.env("username"); 
-const password = Cypress.env("password"); 
-const userPoolId = Cypress.env("userPoolId"); 
-const clientId = Cypress.env ("clientId");
 
-const awsconfig = { 
-  aws_user_pools_id: userPoolId, 
-  aws_user_pools_web_client_id: clientId, 
-}; 
-Auth. configure (awsconfig) ;
+```js
+const Auth = require("aws-amplify").Auth;
+import "cypress-localstorage-commands";
+const username = Cypress.env("username");
+const password = Cypress.env("password");
+const userPoolId = Cypress.env("userPoolId");
+const clientId = Cypress.env("clientId");
+
+const awsconfig = {
+  aws_user_pools_id: userPoolId,
+  aws_user_pools_web_client_id: clientId,
+};
+Auth.configure(awsconfig);
 
 Cypress.Commands.add("signIn", () => {
+  cy.then(() => Auth.signIn(username, password)).then((cognitoUser) => {
+    const idToken = cognitoUser.signInUserSession.idToken.jwtToken;
+    const accessToken = cognitoUser.signInUserSession.accessToken.jwtToken;
 
-    cy.then(() => Auth.signIn(username, password)).then((cognitoUser) => {
-      const idToken = cognitoUser.signInUserSession.idToken.jwtToken;
-      const accessToken = cognitoUser.signInUserSession.accessToken.jwtToken;
-  
-      const makeKey = (name) => `CognitoIdentityServiceProvider
+    const makeKey = (name) => `CognitoIdentityServiceProvider
         .${cognitoUser.pool.clientId}
         .${cognitoUser.username}.${name}`;
-  
-      cy.setLocalStorage(makeKey("accessToken"), accessToken);
-      cy.setLocalStorage(makeKey("idToken"), idToken);
-      cy.setLocalStorage(
-        `CognitoIdentityServiceProvider.${cognitoUser.pool.clientId}.LastAuthUser`,
-        cognitoUser.username
-      );
-    });
-    cy.saveLocalStorage();
+
+    cy.setLocalStorage(makeKey("accessToken"), accessToken);
+    cy.setLocalStorage(makeKey("idToken"), idToken);
+    cy.setLocalStorage(
+      `CognitoIdentityServiceProvider.${cognitoUser.pool.clientId}.LastAuthUser`,
+      cognitoUser.username
+    );
   });
+  cy.saveLocalStorage();
+});
 ```
 
 - Create a new file at the root of your project named `cypress.env.json` with the following content
+
 ```json
-{ 
-    "username": "[Login username you just created]", 
-    "password": "[Login password you just created]", 
-    "userPoolId": "[The `aws_user_pools_id` value found in your `src/aws-exports.js`]", 
-    "clientId": "[The `aws_user_pools_web_client_id` value found in your `src/aws-exports.js`]" 
+{
+  "username": "[Login username you just created]",
+  "password": "[Login password you just created]",
+  "userPoolId": "[The `aws_user_pools_id` value found in your `src/aws-exports.js`]",
+  "clientId": "[The `aws_user_pools_web_client_id` value found in your `src/aws-exports.js`]"
 }
 ```
 
 - Add the `cypress.env.json` to `.gitignore` so that it will not be committed and pushed to GitHub
+
 ```
 #amplify
 amplify/\#current-cloud-backend
@@ -1524,6 +1533,7 @@ cypress.env.json
 ```
 
 - Add the following set ups and tear downs to `cypress/integration/note.spec.js`
+
 ```js
 before(() => {
   cy.signIn();
@@ -1537,7 +1547,7 @@ after(() => {
 
 beforeEach(() => {
   cy.restoreLocalStorage();
-  cy.visit('/');
+  cy.visit("/");
 });
 
 afterEach(() => {
@@ -1557,6 +1567,7 @@ afterEach(() => {
   <summary>Notes App Deployment</summary>
 
 ## Notes App Deployment
+
 Amplify provides the ability to [deploy](https://docs.amplify.aws/guides/hosting/git-based-deployments/q/platform/js), build, run tests and host your application ([Continuous Delivery](https://en.wikipedia.org/wiki/Continuous_delivery))
 
 - If you have not already, [create](https://docs.github.com/en/github/getting-started-with-github/signing-up-for-github/signing-up-for-a-new-github-account) a GitHub account
@@ -1571,7 +1582,93 @@ Amplify provides the ability to [deploy](https://docs.amplify.aws/guides/hosting
 - Select the GitHub repository where your code is stored
 - Complete the set up, save and deploy.
 
+- **In order for the Cypress tests to work in the Amplify build you will need to add the same properties that you added to the `cypress.env.json` file because you did not push that file up since you added it to the `.gitignore` file.**
+- Each environment variable has a prefix of `cypress_`
 
+  - cypress_username
+  - cypress_password
+  - cypress_userPoolId
+  - cypress_clientId
+
+- On the left navigation within your AWS Amplify Application, select `Environment variables`
+- Click the `Manage variables` button
+- Click the `Add variable` button
+- Type `cypress_username` in the field labeled `Enter variable here`
+- Type the corresponding value from your `cypress.env.json` in the field labeled `Enter value here`
+- Repeat the previous three steps for `cypress_password`, `cypress_userPoolId`, and `cypress_clientId`
+- Click the `Save` button
+
+- Navigate back to your AWS Amplify Application
+- Click on your branch name (most likely `main`)
+- Click the `Redeploy this version` button
+
+-The `Test` step in the build should pass (Green).
+
+So what does this Amplify build actually do?
+
+- Provision
+  - Provisions a [docker image](https://docs.docker.com/get-started/overview) where our React application can be built.
+- Build
+  - [Clones](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository-from-github/cloning-a-repository) your GitHub repository
+  - Builds your backend AWS services with the [CloudFormation](https://aws.amazon.com/cloudformation) scripts that Amplify generated for you.
+  - Builds your frontend React application using `npm` commands
+- Test
+  - Starts the application locally within the Docker image and Tests your application using your Cypress Test
+- Deploy
+  - If the tests pass it [deploys](https://en.wikipedia.org/wiki/Software_deployment) your React application to a public URL where anyone can access it. **Important: This step automatically prevents broken software from being released to your customers. We value working software and we bake it into our [Deployment Pipeline](https://martinfowler.com/bliki/DeploymentPipeline.html)**
+- Verify
+
+  - Generates screenshots of your application's home page to ensure your app renders well on different mobile resolutions.
+
+- This deployment pipeline kicks off every time you push your code up to GitHub.
+
+**At this point Amplify does not support running non-Cypress tests. This is a known limitation of the Amplify build pipeline. In the next section we will set up a [GitHub Action](https://docs.github.com/en/actions) to run unit tests when you push your code up.**
+
+</details>
+
+<details>
+  <summary>GitHub Action: Run Non-Cypress Tests</summary>
+
+## GitHub Action: Run Non-Cypress Tests
+
+Since Amplify does not run non-Cypress tests in the deployment pipeline, we will use Github Actions to run `npm test` every time your code is pushed up to GitHub.
+
+- Create a new directory at the root of the project `.github/workflows`
+- Create a new file `node-ci.yaml` in the new directory
+
+```yaml
+name: Node.js CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x, 15.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm install
+      - run: npm run test
+```
+
+- Commit and Push
+- Verify that the `Actions` tab at the top of your GitHub repository ran the new [workflow](https://docs.github.com/en/actions/guides/building-and-testing-nodejs)
+
+- Green!
+
+[Code for this section]()
 
 </details>
 
@@ -1579,43 +1676,50 @@ Amplify provides the ability to [deploy](https://docs.amplify.aws/guides/hosting
   <summary>Log Out</summary>
 
 ## Log Out
+
 While users can now log into the notes application they can not log back out.
 
 - Add a Cypress test that will drive the production code changes
+
 ```js
-it('should have an option to sign out', () => {
-    cy.get('[data-testid=sign-out] > .hydrated').click()
-    cy.get('amplify-auth-container.hydrated > .hydrated').should('exist')
-})
+it("should have an option to sign out", () => {
+  cy.get("[data-testid=sign-out] > .hydrated").click();
+  cy.get("amplify-auth-container.hydrated > .hydrated").should("exist");
+});
 ```
 
 - Create a new component called `Footer.js` in the `src` directory
+
 ```js
-import { AmplifySignOut } from '@aws-amplify/ui-react';
+import { AmplifySignOut } from "@aws-amplify/ui-react";
 
 function Footer() {
-    return (
-      <div data-testid="sign-out">
-        <AmplifySignOut/>
-      </div>
-    );
-  }
-  
+  return (
+    <div data-testid="sign-out">
+      <AmplifySignOut />
+    </div>
+  );
+}
+
 export default Footer;
 ```
 
 - Add the new `Footer` component to the `App` component
+
 ```js
 <div className="App">
   <Header />
-  <NoteForm notes={notes}  
-    formData={formData} 
-    setFormDataCallback={setFormData} 
-    createNoteCallback={createNote}/>
-  <NoteList notes={notes}/>
+  <NoteForm
+    notes={notes}
+    formData={formData}
+    setFormDataCallback={setFormData}
+    createNoteCallback={createNote}
+  />
+  <NoteList notes={notes} />
   <Footer />
 </div>
 ```
+
 - Run all the tests
 - Green!
 - Commit
@@ -1628,9 +1732,11 @@ export default Footer;
   <summary>Backend API</summary>
 
 ## Backend API
-Now that we have user authentication hooked up we need to add the ability for customer to get their "notes to show up on their mobile phone browser too".  This means that we can not use local storage on the user's computer anymore.  Instead we need to build backend [API](https://en.wikipedia.org/wiki/API) that will store notes independently from the frontend code.
+
+Now that we have user authentication hooked up we need to add the ability for customer to get their "notes to show up on their mobile phone browser too". This means that we can not use local storage on the user's computer anymore. Instead we need to build backend [API](https://en.wikipedia.org/wiki/API) that will store notes independently from the frontend code.
 
 - Run `amplify add api` at the root of your project
+
 ```
 Please select from one of the below mentioned services: GraphQL
 Provide API name: tddamplifyreact
@@ -1642,8 +1748,10 @@ Do you have an annotated GraphQL schema? No
 Choose a schema template: Single object with fields (e.g., “Todo” with ID, name, description)
 Do you want to edit the schema now? Yes
 ```
-- [GraphQL](https://graphql.org/) is an alternative to [REST](Representational state transfer).  GraphQL APIs are more flexible than REST APIs.
+
+- [GraphQL](https://graphql.org/) is an alternative to [REST](Representational state transfer). GraphQL APIs are more flexible than REST APIs.
 - This command created
+
   - `amplify/backend/api/`
   - `amplify/backend/backend-config.json`
 
@@ -1672,41 +1780,48 @@ Do you want to edit the schema now? Yes
   - amplify-tddamplifyreact-dev-121349 AWS::CloudFormation::Stack
 
 ### Cut Over Repository To Use GraphQL
+
 Now that we have a GraphQL API that is storing our notes in a [DynamoDB](https://aws.amazon.com/dynamodb) table we can replace `localforage` calls with GraphQL API calls.
 
 - Replace `localforage` calls in the `NoteRepository` with GraphQL API calls
+
 ```js
-import { API } from 'aws-amplify';
-import { listNotes } from './graphql/queries';
-import { createNote as createNoteMutation} from './graphql/mutations';
+import { API } from "aws-amplify";
+import { listNotes } from "./graphql/queries";
+import { createNote as createNoteMutation } from "./graphql/mutations";
 
-export async function findAll(){
-    const apiData = await API.graphql({ query: listNotes });
-    return apiData.data.listNotes.items;
-};
+export async function findAll() {
+  const apiData = await API.graphql({ query: listNotes });
+  return apiData.data.listNotes.items;
+}
 
-export async function save(note){
-    const apiData = await API.graphql({ query: createNoteMutation, variables: { input: note } });
-    return apiData.data.createNote;
+export async function save(note) {
+  const apiData = await API.graphql({
+    query: createNoteMutation,
+    variables: { input: note },
+  });
+  return apiData.data.createNote;
 }
 ```
 
 - We do need to call save first in the `createNote` callback function in the `App` component because when GraphQL saves a note it generates a unique `ID` that we want to have access to in our `note` array.
+
 ```js
 async function createNote() {
   const newNote = await save(formData);
-  const updatedNoteList = [ ...notes, newNote ];
-  setNotes(updatedNoteList); 
+  const updatedNoteList = [...notes, newNote];
+  setNotes(updatedNoteList);
 }
 ```
 
-- The final place that we need to remove `localforage` is in the `note.spec.js` Cypress test.  GraphQL does not provide an equivalent API endpoint to delete all of the notes so we will not be able to simply replace the `localforage.clear()` function call with a GraphQL one.  In a separate commit we will added the ability to delete notes by `ID` through the UI.  This is a [mutation](https://graphql.org/learn/queries/#mutations) that GraphQL provides.  But for now we will just remove the clean up in the Cypress test.
+- The final place that we need to remove `localforage` is in the `note.spec.js` Cypress test. GraphQL does not provide an equivalent API endpoint to delete all of the notes so we will not be able to simply replace the `localforage.clear()` function call with a GraphQL one. In a separate commit we will added the ability to delete notes by `ID` through the UI. This is a [mutation](https://graphql.org/learn/queries/#mutations) that GraphQL provides. But for now we will just remove the clean up in the Cypress test.
+
 ```js
 describe('Note Capture', () => {
   before(() => {
       cy.signIn();
   });
-  
+
   after(() => {
       cy.clearLocalStorageSnapshot();
       cy.clearLocalStorage();
@@ -1728,20 +1843,24 @@ describe('Note Capture', () => {
   <summary>Add Note Deletion</summary>
 
 ## Add Note Deletion
-In order to add note deletion, let's drive this from the Cypress test.  This will help in cleaning up notes that were created during the UI test.
+
+In order to add note deletion, let's drive this from the Cypress test. This will help in cleaning up notes that were created during the UI test.
 
 - Add a deletion test to the Cypress test
-```js
-it('should delete note', () => {
-  cy.get('[data-testid=test-button-0]').click();
 
-  cy.get('[data-testid=test-name-0]').should('not.exist')
-  cy.get('[data-testid=test-description-0]').should('not.exist')
-})
+```js
+it("should delete note", () => {
+  cy.get("[data-testid=test-button-0]").click();
+
+  cy.get("[data-testid=test-name-0]").should("not.exist");
+  cy.get("[data-testid=test-description-0]").should("not.exist");
+});
 ```
-- Run the Cypress test and verify that it Fails 
+
+- Run the Cypress test and verify that it Fails
 
 - To make it go green, add a new deletion function to `NoteRepository.js`
+
 ```js
 ...
 import { createNote as createNoteMutation, deleteNote as deleteNoteMutation} from './graphql/mutations';
@@ -1754,28 +1873,32 @@ export async function deleteById( id ) {
 ```
 
 - Create a new deletion callback function in `App.js`
+
 ```js
-async function deleteNoteCallback( id ) {
-  const newNotesArray = notes.filter(note => note.id !== id);
+async function deleteNoteCallback(id) {
+  const newNotesArray = notes.filter((note) => note.id !== id);
   setNotes(newNotesArray);
   await deleteById(id);
 }
 ```
 
 - Pass the `deleteNoteCallback` callback function parameter to the `NoteList` component.
+
 ```js
-<NoteList notes={notes}
-  deleteNoteCallback={deleteNoteCallback}/>
+<NoteList notes={notes} deleteNoteCallback={deleteNoteCallback} />
 ```
 
 - Add a deletion button to the `NoteList` component
+
 ```js
-<button 
-    data-testid={'test-button-' + index}
-    onClick={() => props.deleteNoteCallback(note.id)}>
-    Delete note
+<button
+  data-testid={"test-button-" + index}
+  onClick={() => props.deleteNoteCallback(note.id)}
+>
+  Delete note
 </button>
 ```
+
 - Run all the tests
 - Green
 - Commit
@@ -1788,20 +1911,22 @@ async function deleteNoteCallback( id ) {
   <summary>Note List Component Testing</summary>
 
 ## Note List Component Testing
+
 Since we started at the top of the testing pyramid we need to make sure, once we are on green, that we work our way down to lower level tests too.
 
 - Add a test to `NoteList.test.js` to verify the deletion behavior of the `NoteList` component.
+
 ```js
 import { render, screen, fireEvent } from '@testing-library/react';
 import NoteList from '../NoteList';
 
 const deleteNoteCallback = jest.fn();
 
-const defaultProps = { 
+const defaultProps = {
     notes: [],
     deleteNoteCallback: deleteNoteCallback
  };
-  
+
 const setup = (props = {}) => {
     const setupProps = { ...defaultProps, ...props};
     return render(<NoteList {...setupProps}/>);
@@ -1841,7 +1966,8 @@ test('should delete note when clicked', () => {
     expect(deleteNoteCallback.mock.calls[0][0]).toStrictEqual(1);
 });
 ```
-- I added a mock function for the `deleteNoteCallback` and a `setup` function that has properties that can be overridden for specific test cases.  This is a pattern that is often used in this style of tests.
+
+- I added a mock function for the `deleteNoteCallback` and a `setup` function that has properties that can be overridden for specific test cases. This is a pattern that is often used in this style of tests.
 
 - Run all of the tests
 - Green
@@ -1855,55 +1981,64 @@ test('should delete note when clicked', () => {
   <summary>Unit Testing Note Repository</summary>
 
 ## Unit Testing Note Repository
-[Unit testing](https://en.wikipedia.org/wiki/Unit_testing) is the lowest level testing that tests out a single function in complete isolation.  For the `NoteRepository` this means that amplify and GraphQL imports will need to be [mocked](https://en.wikipedia.org/wiki/Mock_object) out so that we do not hit AWS during our testing.
+
+[Unit testing](https://en.wikipedia.org/wiki/Unit_testing) is the lowest level testing that tests out a single function in complete isolation. For the `NoteRepository` this means that amplify and GraphQL imports will need to be [mocked](https://en.wikipedia.org/wiki/Mock_object) out so that we do not hit AWS during our testing.
 
 - Create a new test called `NoteRepository.test.js` file under the `src/test/` directory.
-```js
-import { save, findAll, deleteById} from '../NoteRepository';
-import { API } from 'aws-amplify';
-import { createNote as createNoteMutation, deleteNote as deleteNoteMutation} from '../graphql/mutations';
-import { listNotes } from '../graphql/queries';
 
+```js
+import { save, findAll, deleteById } from "../NoteRepository";
+import { API } from "aws-amplify";
+import {
+  createNote as createNoteMutation,
+  deleteNote as deleteNoteMutation,
+} from "../graphql/mutations";
+import { listNotes } from "../graphql/queries";
 
 const mockGraphql = jest.fn();
-const id = 'test-id'
+const id = "test-id";
 
 beforeEach(() => {
-    API.graphql = mockGraphql
+  API.graphql = mockGraphql;
 });
 
 afterEach(() => {
-    jest.clearAllMocks()
+  jest.clearAllMocks();
 });
 
-it('should create a new note', () => {
-    const note = {name: 'test name', description: 'test description'}
+it("should create a new note", () => {
+  const note = { name: "test name", description: "test description" };
 
-    save(note)
+  save(note);
 
-    expect(mockGraphql.mock.calls.length).toBe(1);
-    expect(mockGraphql.mock.calls[0][0]).toStrictEqual(
-        { query: createNoteMutation, variables: { input: note } }
-    );
-})
+  expect(mockGraphql.mock.calls.length).toBe(1);
+  expect(mockGraphql.mock.calls[0][0]).toStrictEqual({
+    query: createNoteMutation,
+    variables: { input: note },
+  });
+});
 
-it('should findAll notes', () => {
-    const note = {name: 'test name', description: 'test description'}
+it("should findAll notes", () => {
+  const note = { name: "test name", description: "test description" };
 
-    findAll(note)
+  findAll(note);
 
-    expect(mockGraphql.mock.calls.length).toBe(1);
-    expect(mockGraphql.mock.calls[0][0]).toStrictEqual({ query: listNotes });
-})
+  expect(mockGraphql.mock.calls.length).toBe(1);
+  expect(mockGraphql.mock.calls[0][0]).toStrictEqual({ query: listNotes });
+});
 
-it('should delete note by id', () => {
-    deleteById(id)
+it("should delete note by id", () => {
+  deleteById(id);
 
-    expect(mockGraphql.mock.calls.length).toBe(1);
-    expect(mockGraphql.mock.calls[0][0]).toStrictEqual({ query: deleteNoteMutation, variables: { input: { id } }});
-})
+  expect(mockGraphql.mock.calls.length).toBe(1);
+  expect(mockGraphql.mock.calls[0][0]).toStrictEqual({
+    query: deleteNoteMutation,
+    variables: { input: { id } },
+  });
+});
 ```
-- In the `beforeEach` function the real `API.graphql` function is replaced with a mock function.  This enables us to test this script in complete isolation.  We can determine how many times the mock function was called and what parameters were passed to that function.  This also keeps this test from trying to call AWS.  This would make the test much slower and more fragile.  Remember that unit tests are tests at the bottom of the testing pyramid which are faster and easier to maintain.
+
+- In the `beforeEach` function the real `API.graphql` function is replaced with a mock function. This enables us to test this script in complete isolation. We can determine how many times the mock function was called and what parameters were passed to that function. This also keeps this test from trying to call AWS. This would make the test much slower and more fragile. Remember that unit tests are tests at the bottom of the testing pyramid which are faster and easier to maintain.
 
 - Run all of your tests
 - Green!
@@ -1917,11 +2052,13 @@ it('should delete note by id', () => {
   <summary>Refactor Project Structure</summary>
 
 ## Refactor Project Structure
+
 It's best to organize your code into a logical [folder structure](https://reactjs.org/docs/faq-structure.html) so that it's easier to understand and navigate.
 
 - Move all of the components into a `note` folder in `src`
 
 - note/
+
   - App.js
   - Footer.js
   - Header.js
@@ -1931,6 +2068,7 @@ It's best to organize your code into a logical [folder structure](https://reactj
   - Move the `NoteRepository` component to a `common` folder in `src`
 
 - common/
+
   - NoteRepository.js
 
 - Run all the tests
