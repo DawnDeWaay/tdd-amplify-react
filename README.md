@@ -2226,6 +2226,7 @@ return (
 </details>
 
 <details>
+
   <summary>Mobile App: Part 2</summary>
 
 ## Mobile App: Part 2
