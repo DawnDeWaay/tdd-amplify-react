@@ -2065,7 +2065,7 @@ It's best to organize your code into a logical [folder structure](https://reactj
   - NoteForm.js
   - NoteList.js
 
-  - Move the `NoteRepository` component to a `common` folder in `src`
+- Move the `NoteRepository` component to a `common` folder in `src`
 
 - common/
 
