@@ -302,8 +302,8 @@ test("should display a create note button", () => {});
 ```
 
 - The test name should be conversational and intent revealing. It should avoid technical words like "render", "component", and the like. We want a new team member to be able to read this test and understand the customer value. The body of the test will provide the technical HOW but the test name should point to the customer's WHY and WHAT.
-- Now we will add a test that renders the component and asserts that the button is labeled "Create Note". For more information on the React Testing Library visit https://testing-library.com/docs
 
+- Now we will add a test that renders the component and asserts that the button is labeled "Create Note". For more information on the React Testing Library visit https://testing-library.com/docs
 ```js
 import { render, screen } from "@testing-library/react";
 import NoteForm from "../NoteForm";
@@ -683,7 +683,7 @@ If you go up to the `App` component the call to the `NoteForm` component takes 4
 
 > Functions should have a small number of arguments. No argument is best, followed by one, two, and three. More than three is very questionable and should be avoided with prejudice. - Robert C. Martin
 
-While components don't look like functions when they are called but they are. React uses [JSX](https://reactjs.org/docs/introducing-jsx.html) which is interpreted into functions.
+While components don't look like functions when they are called, they are. React uses [JSX](https://reactjs.org/docs/introducing-jsx.html) which is interpreted into functions.
 
 ### Note List Component
 
@@ -702,7 +702,7 @@ function NoteList(props) {
 export default NoteList;
 ```
 
-- Cut the JSX that lists notes in the `NoteForm` component and paste the in the new component.
+- Cut the JSX, that lists notes in the `NoteForm` component, and paste it into the new component.
 
 ```js
 function NoteList(props) {
@@ -845,7 +845,7 @@ test("should throw an exception the note array is undefined", () => {
 
 ## Usability
 
-Customers rarely ask explicitly for a usable product. In this application rich world that we live in it's assumed that applications will be delivered with common sense usability baked-in. When I look at the application as it stands, a few things pop out at me.
+Customers rarely ask explicitly for a usable product. In this application rich world that we live in, it's assumed that applications will be delivered with common sense usability baked-in. When I look at the application as it stands, a few things pop out at me.
 
 1. Header - there's no heading telling you what this application does
 1. Form Validation - there's no form field validation
@@ -935,7 +935,7 @@ You will notice that in the TDD testing cycle we commit very small bits of worki
 1. We are preserving working code. ["Working software is the primary measure of progress."](https://agilemanifesto.org/principles.html)
 1. We can [revert](<https://en.wikipedia.org/wiki/Reversion_(software_development)>) our changes back to a know working state without loosing very many changes.
 
-This last benefit is worth expounding upon. The TDD testing cycle keeps us laser focused on writing small pieces of working functionality. In fact the [3 Laws of TDD](http://blog.cleancoder.com/uncle-bob/2014/12/17/TheCyclesOfTDD.html) prevent us from writing more code than is necessary to satisfy a focused test.
+This last benefit is worth expounding upon. The TDD testing cycle keeps us laser focused on writing small pieces of working functionality. In fact, the [3 Laws of TDD](http://blog.cleancoder.com/uncle-bob/2014/12/17/TheCyclesOfTDD.html) prevent us from writing more code than is necessary to satisfy a focused test.
 
 #### Three Laws of TDD
 
@@ -949,9 +949,9 @@ These tight feedback loops help software developers avoid going down rabbit hole
 
 ### Form Validation
 
-Let's assume that the note name and description are both required fields. While you want the customer driving decisions about your product, one way to gather customer feedback is to launch and learn. As software developers we must be obsessed with our customers. Set up a regular cadence to meet with your customers and demonstrate a working application. Make space for them to let you know what they think.
+Let's assume that the note name and description are both required fields. While you want the customer driving decisions about your product, one way to gather customer feedback is to launch-and-learn. Your customers will tell you if they don't like your decision.  As software developers we must be obsessed with our customers. Set up a regular cadence to meet with your customers and demonstrate a working application. Make space for them to let you know what they think.
 
-In order to test drive validation we need to determine where in the testing pyramid to write this test. Remember that the highest-level tests are slow and expensive, so limit these tests between 3 to 5 tests that walk through the most common user experiences. In order to adequately test all of the combinations of good and bad fields this is not well suited for UI testing.
+In order to test drive validation we need to determine where in the testing pyramid to write this test. Remember that the highest-level tests are slow and expensive, so limit these tests to between 3 to 5 tests that walk through the most common user experiences. In order to adequately test all of the combinations of good and bad fields this is not well suited for UI testing.
 
 #### Name and Description Blank
 
@@ -1057,7 +1057,7 @@ test("should add a new note when name and description are provided", () => {
 
 ## Reset Form
 
-One a note is saved the name and description fields should be reset to empty strings.
+When a note is saved the name and description fields should be reset to empty strings.
 
 - Add a test to `NoteForm.test.js`
 
@@ -1089,7 +1089,7 @@ function createNote() {
 - Green
 - Run the Cypress tests and it's **Red**.
 
-What happened? Well while this approach worked for a lower level component test it does not work when React is managing its own [state](https://reactjs.org/docs/state-and-lifecycle.html). React clearly states that you should [not modify state directly](https://reactjs.org/docs/state-and-lifecycle.html#do-not-modify-state-directly). Instead you should use the [setState](https://reactjs.org/docs/hooks-state.html) callback hook.
+What happened? Well while this approach worked for a lower level component test it doesn't work when React is managing its own [state](https://reactjs.org/docs/state-and-lifecycle.html). React clearly warns us that we should [not modify state directly](https://reactjs.org/docs/state-and-lifecycle.html#do-not-modify-state-directly). Instead you should use the [setState](https://reactjs.org/docs/hooks-state.html) callback hook.
 
 - Let's update the test to use the `setFormDataCallback` callback.
 
@@ -1197,7 +1197,7 @@ assert expected <input> to have value '', but the value was test note
 
 React creates a [single page web application](https://en.wikipedia.org/wiki/Single-page_application). This means that the React state does not [persist](<https://en.wikipedia.org/wiki/Persistence_(computer_science)>) beyond a web page refresh. In other words, if you refresh your browser page you will loose all of notes you created.
 
-Since Cypress tests the application in a browser, this is most logical place to test this user expectation.
+Since Cypress tests the application in a browser, this is the most logical place to test this user expectation.
 
 ```js
 it("should load previously saved notes on browser refresh", () => {
@@ -1214,7 +1214,7 @@ it("should load previously saved notes on browser refresh", () => {
 - We now have a failing test. In order to save notes between page reloads we will use [localforage](https://www.npmjs.com/package/localforage).
 
 - Run `npm install localforage`
-- Add a callback function to `App.js` that will lookup up notes that are saved in `localforage`
+- Add a callback function to `App.js` that will look up notes that are saved in `localforage`
 
 ```js
 function fetchNotesCallback() {
@@ -1284,7 +1284,7 @@ test('should add a new note when name and description are provided', () => {
 });
 ```
 
-- To load the saved notes when the application is loaded add the [useEffect](https://reactjs.org/docs/hooks-effect.html#example-using-hooks) hook and call the `fetchNotesCallback` in `App.js`.
+- To load the saved notes when the application is loaded, add the [useEffect](https://reactjs.org/docs/hooks-effect.html#example-using-hooks) hook and call the `fetchNotesCallback` in `App.js`.
 
 ```js
 useEffect(() => {
@@ -1322,7 +1322,7 @@ after(() => {
 
 ## Refactor To Repository
 
-The `App` component now has two concerns. React [state management](https://en.wikipedia.org/wiki/State_management) and persistence. State management is concerned with frontend values where persistence is a backend concern. Persistence and data access concerns are often extracted into a [repository](https://makingloops.com/why-should-you-use-the-repository-pattern).
+The `App` component now has two concerns. React [state management](https://en.wikipedia.org/wiki/State_management) and persistence. State management is concerned with frontend values, where persistence is a backend concern. Persistence and data access concerns are often extracted into a [repository](https://makingloops.com/why-should-you-use-the-repository-pattern).
 
 - Create a `NoteRepository.js` file in the `src` directory.
 - Move all the `localForage` calls to this new file.
@@ -1370,12 +1370,12 @@ async function createNote() {
 
 ## Set Up AWS Amplify
 
-We now have a fully functioning task creation application. When we showed this to our customer they provided quite a bit of feedback. They would like:
+We now have a fully functioning task creation application. When we showed this to our customer they provided some feedback. They would like:
 
 - to secure this application with a user login
 - notes to show up on their mobile phone browser too
 
-While `localForage` provided a quick way to save notes and get valuable customer feedback it is not designed for securing applications or cross-device persistence. [Amazon Web Services](https://aws.amazon.com) does provide services that solve both of these [use cases](https://en.wikipedia.org/wiki/Use_case) and positions our React app for additional possibilities like [notifications](https://aws.amazon.com/sns), backend processing, storing note attachments, and much more. [AWS Amplify](https://aws.amazon.com/amplify) provides a set of tools that significantly simplify connection web and mobile applications to an AWS backend.
+While `localForage` provided a quick way to save notes and get valuable customer feedback, it isn't designed for securing applications or cross-device persistence. [Amazon Web Services](https://aws.amazon.com) does provide services that solve both of these [use cases](https://en.wikipedia.org/wiki/Use_case) and positions our React app for additional possibilities like [notifications](https://aws.amazon.com/sns), backend processing, storing note attachments, and much more. [AWS Amplify](https://aws.amazon.com/amplify) provides a set of tools that significantly simplify connection web and mobile applications to an AWS backend.
 
 - Install the [Install the Amplify CLI](https://docs.amplify.aws/cli/start/install)
 - Run `amplify init` at the root of the project
@@ -1555,7 +1555,7 @@ afterEach(() => {
 });
 ```
 
-- Rerun all of your test.
+- Rerun all of your tests.
 - Green!
 - Commit
 
@@ -1602,7 +1602,7 @@ Amplify provides the ability to [deploy](https://docs.amplify.aws/guides/hosting
 - Click on your branch name (most likely `main`)
 - Click the `Redeploy this version` button
 
--The `Test` step in the build should pass (Green).
+- The `Test` step in the build should pass (Green).
 
 So what does this Amplify build actually do?
 
@@ -1677,7 +1677,7 @@ jobs:
 
 ## Log Out
 
-While users can now log into the notes application they can not log back out.
+While users can now log into the notes application they can't log back out.
 
 - Add a Cypress test that will drive the production code changes
 
@@ -1733,7 +1733,7 @@ export default Footer;
 
 ## Backend API
 
-Now that we have user authentication hooked up we need to add the ability for customer to get their "notes to show up on their mobile phone browser too". This means that we can not use local storage on the user's computer anymore. Instead we need to build backend [API](https://en.wikipedia.org/wiki/API) that will store notes independently from the frontend code.
+Now that we have user authentication hooked up, we need to add the ability for customer to get their "notes to show up on their mobile phone browser too". This means that we can't use local storage on the user's computer anymore. Instead we need to build a backend [API](https://en.wikipedia.org/wiki/API) that will store notes independently from the frontend code.
 
 - Run `amplify add api` at the root of your project
 
@@ -2230,9 +2230,9 @@ return (
   <summary>Mobile App: Part 2</summary>
 
 ## Mobile App: Part 2
-Modern applications are available through the web, mobile apps, Alexa, and so much more.  Our customer wants a [native](https://en.wikipedia.org/wiki/Mobile_app#Native_app) mobile Notes application.  While my first response was, why, they insisted on creating a native mobile app instead of just relying on the mobile-friendly web app that we created using Bootstrap.  In order to build native apps you have a couple choices.  First you can build an application for each mobile operating system: [iOS](https://en.wikipedia.org/wiki/IOS), [Android](https://en.wikipedia.org/wiki/Android_(operating_system)).  If you went down this path you would need to write the iOS application in [Swift](https://en.wikipedia.org/wiki/Swift_(programming_language)) or [Objective-C](https://en.wikipedia.org/wiki/Objective-C).  For Android you would need to write the application in [Java](https://en.wikipedia.org/wiki/Java_(programming_language)).  This is a sensible investment if these native applications need to be highly performant or utilize specific low-level device functionality like iOS's [Face ID](https://en.wikipedia.org/wiki/Face_ID).  In the case of our Notes App non of this applies.  Instead we should use a code-once deploy everywhere solution like [React Native](https://reactnative.dev/) or [Xamarin](https://dotnet.microsoft.com/apps/xamarin).  These frameworks allow you to code once, in a single language, and deploy separate apps for each mobile operating system.
+Modern applications are available through the web, mobile apps, Alexa, and so much more.  Our customer wants a [native](https://en.wikipedia.org/wiki/Mobile_app#Native_app) mobile Notes application.  While my first response was, "why?", they insisted on creating a native mobile app instead of just relying on the mobile-friendly web app that we created using Bootstrap.  In order to build native apps you have a couple choices.  First you can build an application for each mobile operating system: [iOS](https://en.wikipedia.org/wiki/IOS), [Android](https://en.wikipedia.org/wiki/Android_(operating_system)).  If you went down this path you would need to write the iOS application in [Swift](https://en.wikipedia.org/wiki/Swift_(programming_language)) or [Objective-C](https://en.wikipedia.org/wiki/Objective-C).  For Android you would need to write the application in [Java](https://en.wikipedia.org/wiki/Java_(programming_language)).  This is a sensible investment if these native applications need to be highly performant or utilize specific low-level device functionality like iOS's [Face ID](https://en.wikipedia.org/wiki/Face_ID).  In the case of our Notes App none of this applies.  Instead, we should use a code-once deploy everywhere solution like [React Native](https://reactnative.dev/) or [Xamarin](https://dotnet.microsoft.com/apps/xamarin).  These frameworks allow you to code once, in a single language, and deploy separate apps for each mobile operating system.
 
-Since we already built this application in React it seems reasonable that we would build the mobile native application in React Native.  While they are different frameworks they use a similar approach and have similar syntax which makes it easier to learn and support.  As for the AWS backend we want to reuse the same Amplify backend for all of the applications: web, iOS, Android, etc.  The reuse of a single backend service is called [Service-Oriented Architecture](https://en.wikipedia.org/wiki/Service-oriented_architecture).  While each frontend might be different we want the backend logic to be the same.  The backend logic is where our business makes money so we need to keep it safe, performant and bug free.  This is much easier when our backend logic is not duplicated for every frontend application.
+Since we already built this application in React it seems reasonable that we would build the mobile native application in React Native.  While they are different frameworks they use a similar approach and have similar syntax which makes it easier to learn and support.  As for the AWS backend we want to reuse the same Amplify backend for all of the applications: web, iOS, Android, etc.  The reuse of a single backend service is enabled through a [Service-Oriented Architecture](https://en.wikipedia.org/wiki/Service-oriented_architecture).  While each frontend might be different we want the backend logic to be the same.  The backend logic is where our business makes money, so we need to keep it safe, performant and bug free.  This is much easier when our backend logic is not duplicated for every frontend application.
 
 To build this React Native App we will use the [Expo](https://expo.io) framework.  Expo simplifies the creation, testing and deployment of React Native applications.  The code and the tutorial for this second React Native App is available in the following repository: https://github.com/pairing4good/tdd-amplify-react-native.
 
