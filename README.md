@@ -70,7 +70,9 @@ module.exports = defineConfig({
   },
 });
 ```
-- Create a new test called `note.spec.js` under the `cypress\integration\` directory in your project
+- Click `Create new empty spec` in the Cypress window
+- Create a new test named `cypress/e2e/note.spec.cy.js`
+- Open the `cypress/e2e/note.spec.cy.js` file
 - Write your first test with intent revealing names.
 
 ```js
