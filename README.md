@@ -85,7 +85,7 @@ describe("Note Capture", () => {
 });
 ```
 
-- Click on the `note.spec.js` test in the Cypress test browser. The test should run and should pass (green).
+- Click on the `note.spec.cy.js` test in the Cypress test browser. The test should run and should pass (green).
 - Replace `expect(true).to.equal(true)` with the following
 
 ```js
