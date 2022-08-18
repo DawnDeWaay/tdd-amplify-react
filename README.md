@@ -49,17 +49,27 @@ The user story and acceptance criteria above describe a desired customer outcome
 - `cd` into `tdd-amplify-react`
 - Run `npm start` to start the new react app
 - In a new terminal window run `npm install cypress --save-dev` to install Cypress via [npm](https://www.npmjs.com):
-- Configure the base url in the `cypress.json` file
+- Run `npx cypress open` to Open Cypress
+- Select `E2E Testing` within the Cypress window
+- Click `Continue` at the bottom of the page
+- Click on your preferred browser for E2E testing
+- Click `Start E2E Testing in [Your Preferred Browser]`
+- 
+
+- Configure the base url in the `cypress.config.js` file
 
 ```js
-{
-    "baseUrl": "http://localhost:3000"
-}
-```
+const { defineConfig } = require("cypress");
 
-- Run `npx cypress open` to Open Cypress
-- Run one or two of the Cypress `examples` to make sure everything is set up correctly.
-- **Once you have verified that Cypress is running correctly, delete the `cypress/integration/examples/` directory so that your tests will run faster on your [Continuous Integration (CI) Server](https://en.wikipedia.org/wiki/Continuous_integration).**
+module.exports = defineConfig({
+  e2e: {
+    baseUrl: 'http://localhost:3000',
+    setupNodeEvents(on, config) {
+      // implement node event listeners here
+    },
+  },
+});
+```
 - Create a new test called `note.spec.js` under the `cypress\integration\` directory in your project
 - Write your first test with intent revealing names.
 
