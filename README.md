@@ -445,7 +445,7 @@ Then a note is listed
 
 These three user acceptance criteria will drive the need to actually save notes. While this can be achieved through component tests, let's add this to our high-level UI test. These tests are often called end-to-end tests because they follow a few paths through the application. These test are at the top of the testing pyramid because they tend to be slower and more brittle than tests lower in the pyramid. This translates into these tests tending to cost more to build, run and maintain. Consequently, we try to limit their number to only a few tests that follow typical paths through the system.
 
-- Let's start with the first acceptance criteria. To achieve this we need to add an initial check, in `note.spec.js`, to verify that no notes are listed prior to entering a note.
+- Let's start with the first acceptance criteria. To achieve this we need to add an initial check, in `note.spec.cy.js`, to verify that no notes are listed prior to entering a note.
 
 ```js
 it("should create a note when name and description provided", () => {
@@ -1542,7 +1542,7 @@ amplifytools.xcconfig
 cypress.env.json
 ```
 
-- Add the following set ups and tear downs to `cypress/integration/note.spec.js`
+- Add the following set ups and tear downs to `cypress/integration/note.spec.cy.js`
 
 ```js
 before(() => {
@@ -1824,7 +1824,7 @@ async function createNote() {
 }
 ```
 
-- The final place that we need to remove `localforage` is in the `note.spec.js` Cypress test. GraphQL does not provide an equivalent API endpoint to delete all of the notes so we will not be able to simply replace the `localforage.clear()` function call with a GraphQL one. In a separate commit we will added the ability to delete notes by `ID` through the UI. This is a [mutation](https://graphql.org/learn/queries/#mutations) that GraphQL provides. But for now we will just remove the clean up in the Cypress test.
+- The final place that we need to remove `localforage` is in the `note.spec.cy.js` Cypress test. GraphQL does not provide an equivalent API endpoint to delete all of the notes so we will not be able to simply replace the `localforage.clear()` function call with a GraphQL one. In a separate commit we will added the ability to delete notes by `ID` through the UI. This is a [mutation](https://graphql.org/learn/queries/#mutations) that GraphQL provides. But for now we will just remove the clean up in the Cypress test.
 
 ```js
 describe('Note Capture', () => {
