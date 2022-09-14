@@ -1,6 +1,6 @@
 # TDD AWS Amplify React App
 
-https://github.com/pairing4good/tdd-amplify-react>/actions/workflows/node-ci.yaml/badge.svg
+![Node CI](https://github.com/pairing4good/tdd-amplify-react/actions/workflows/node-ci.yaml/badge.svg)
 
 In this tutorial we will [test drive](https://en.wikipedia.org/wiki/Test-driven_development) a react app which will use [AWS Amplify](https://aws.amazon.com/amplify) to set up authentication and the backend API.
 
