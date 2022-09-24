@@ -21,6 +21,7 @@ There are a few benefits of starting at the top of the testing pyramid:
   <summary>Set Up</summary>
   
 - Download and install [Visual Studio Code](https://code.visualstudio.com/)
+- Open VS Code and set up the ability to [launch VS Code from the terminal](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line) 
 - Install [Node Version Manager](https://github.com/nvm-sh/nvm). `nvm` allows you to quickly install and use different versions of node via the command line.
 - Run `nvm install node` to install the latest version of node
 - Run `nvm use node` to use the latest version of node
@@ -55,8 +56,11 @@ The user story and acceptance criteria above describe a desired customer outcome
 - In a terminal window `cd` to the location where you store your git repositories.  I like to store mine under `~/git`.
 - Run `npx create-react-app tdd-amplify-react` to create a new react app
 - `cd` into `tdd-amplify-react`
-- Run `npm start` to start the new react app
-- In a new terminal window run `npm install cypress --save-dev` to install Cypress via [npm](https://www.npmjs.com):
+- Run `code .` to open the directory in VS Code
+- Open a new terminal within VS Code by selecting `Terminal < New Terminal`
+- In the new terminal session run `npm start` to start the new react app                   
+- Open a second terminal session within VS Code by selecting `Terminal < New Terminal` again
+- In this second terminal session run `npm install cypress --save-dev` to install Cypress via [npm](https://www.npmjs.com):
 - Run `npx cypress open` to Open Cypress
 - Select `E2E Testing` within the Cypress window
 - Click `Continue` at the bottom of the page
