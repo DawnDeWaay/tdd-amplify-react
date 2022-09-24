@@ -66,7 +66,7 @@ The user story and acceptance criteria above describe a desired customer outcome
 - Click `Continue` at the bottom of the page
 - Click on your preferred browser for E2E testing
 - Click `Start E2E Testing in [Your Preferred Browser]`
-- Configure the base url in the `cypress.config.js` file
+- Configure the base url in the `cypress.config.js` file at the root of your repository
 
 ```js
 const { defineConfig } = require("cypress");
