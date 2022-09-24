@@ -52,7 +52,8 @@ Then a list of two notes are displayed
 
 The user story and acceptance criteria above describe a desired customer outcome. The user acceptance test will link this narrative with a high level how. For this tutorial our first application will be a [web application](https://en.wikipedia.org/wiki/Web_application) in [React](https://reactjs.org). The testing framework we will use to test this will be [Cypress](https://www.cypress.io)
 
-- In a terminal window run `npx create-react-app tdd-amplify-react` to create a new react app
+- In a terminal window `cd` to the location where you store your git repositories.  I like to store mine under `~/git`.
+- Run `npx create-react-app tdd-amplify-react` to create a new react app
 - `cd` into `tdd-amplify-react`
 - Run `npm start` to start the new react app
 - In a new terminal window run `npm install cypress --save-dev` to install Cypress via [npm](https://www.npmjs.com):
