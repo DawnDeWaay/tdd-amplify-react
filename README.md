@@ -60,7 +60,7 @@ The user story and acceptance criteria above describe a desired customer outcome
 - Open a new terminal within VS Code by selecting `Terminal < New Terminal`
 - In the new terminal session run `npm start` to start the new react app                   
 - Open a second terminal session within VS Code by selecting `Terminal < New Terminal` again
-- In this second terminal session run `npm install cypress --save-dev` to install Cypress via [npm](https://www.npmjs.com):
+- In this second terminal session run `npm install cypress --save-dev` to install Cypress via [npm](https://www.npmjs.com)
 - Run `npx cypress open` to Open Cypress
 - Select `E2E Testing` within the Cypress window
 - Click `Continue` at the bottom of the page
