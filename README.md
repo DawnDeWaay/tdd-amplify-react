@@ -81,8 +81,8 @@ module.exports = defineConfig({
 });
 ```
 - Click `Create new empty spec` in the Cypress window
-- Create a new test named `cypress/e2e/note.spec.cy.js`
-- Open the `cypress/e2e/note.spec.cy.js` file
+- Create a new test named `cypress/e2e/note.cy.js`
+- Open the `cypress/e2e/note.cy.js` file
 - Write your first test with intent revealing names.
 
 ```js
@@ -97,7 +97,7 @@ describe("Note Capture", () => {
 });
 ```
 
-- Click on the `note.spec.cy.js` test in the Cypress test browser. The test should run and should pass (green).
+- Click on the `note.cy.js` test in the Cypress test browser. The test should run and should pass (green).
 - Replace `expect(true).to.equal(true)` with the following
 
 ```js
@@ -457,7 +457,7 @@ Then a note is listed
 
 These three user acceptance criteria will drive the need to actually save notes. While this can be achieved through component tests, let's add this to our high-level UI test. These tests are often called end-to-end tests because they follow a few paths through the application. These tests are at the top of the testing pyramid because they tend to be slower and more brittle than tests lower in the pyramid. This translates into these tests tending to cost more to build, run and maintain. Consequently, we try to limit their number to only a few tests that follow typical paths through the system.
 
-- Let's start with the first acceptance criteria. To achieve this we need to add an initial check, in `note.spec.cy.js`, to verify that no notes are listed prior to entering a note.
+- Let's start with the first acceptance criteria. To achieve this we need to add an initial check, in `note.cy.js`, to verify that no notes are listed prior to entering a note.
 
 ```js
 it("should create a note when name and description provided", () => {
@@ -1554,7 +1554,7 @@ amplifytools.xcconfig
 cypress.env.json
 ```
 
-- Add the following setups and teardowns to `cypress/integration/note.spec.cy.js`
+- Add the following setups and teardowns to `cypress/integration/note.cy.js`
 
 ```js
 before(() => {
@@ -1836,7 +1836,7 @@ async function createNote() {
 }
 ```
 
-- The final place that we need to remove `localforage` is in the `note.spec.cy.js` Cypress test. GraphQL does not provide an equivalent API endpoint to delete all of the notes so we will not be able to simply replace the `localforage.clear()` function call with a GraphQL one. In a separate commit we will add the ability to delete notes by `ID` through the UI. This is a [mutation](https://graphql.org/learn/queries/#mutations) that GraphQL provides. But for now we will just remove the clean up in the Cypress test.
+- The final place that we need to remove `localforage` is in the `note.cy.js` Cypress test. GraphQL does not provide an equivalent API endpoint to delete all of the notes so we will not be able to simply replace the `localforage.clear()` function call with a GraphQL one. In a separate commit we will add the ability to delete notes by `ID` through the UI. This is a [mutation](https://graphql.org/learn/queries/#mutations) that GraphQL provides. But for now we will just remove the clean up in the Cypress test.
 
 ```js
 describe('Note Capture', () => {
