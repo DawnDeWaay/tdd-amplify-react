@@ -18,6 +18,16 @@ There are a few benefits of starting at the top of the testing pyramid:
 </details>
 
 <details>
+  <summary>Set Up</summary>
+  
+- Download and install [Visual Studio Code](https://code.visualstudio.com/)
+- Install [Node Version Manager](https://github.com/nvm-sh/nvm). `nvm` allows you to quickly install and use different versions of node via the command line.
+- Run `nvm install node` to install the latest version of node
+- Run `nvm use node` to use the latest version of node
+  
+</details>
+
+<details>
   <summary>First Test</summary>
 
 ## First Test
@@ -37,11 +47,6 @@ Given that a note exists
 When the user enters a new note title and description
 Then a list of two notes are displayed
 ```
-
-### Prerequisites
-
-- [Visual Studio Code](https://code.visualstudio.com/)
-- [Node.js](https://nodejs.org)
 
 ### Red - Acceptance Test
 
