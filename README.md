@@ -301,6 +301,16 @@ Congratulations, you've successfully made an internal structural change "without
 </details>
 
 <details>
+  <summary>Linting Code</summary>
+  
+</details>
+
+<details>
+  <summary>Continuous Integration</summary>
+  
+</details>
+
+<details>
   <summary>NoteForm Test</summary>
 
 ## NoteForm Test
