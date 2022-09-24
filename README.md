@@ -30,7 +30,7 @@ I want to capture a note
 So that I can refer back to it later
 ```
 
-### What: User Accceptance Criteria
+### What: User Acceptance Criteria
 
 ```
 Given that a note exists
@@ -184,7 +184,7 @@ In test driven development we do the simplest thing possible to make a test go g
 <p data-testid="test-name-0">test note</p>
 ```
 
-- Now the Cypresss test fails on the note description
+- Now the Cypress test fails on the note description
 
 ```
 Timed out retrying after 4000ms: Expected to find element: [data-testid=test-description-0], but never found it.
@@ -227,7 +227,7 @@ When I look at the existing application a few things pop out.
 - The button needs a name
 - The inputs need descriptions
 
-We could just make these changes and this high-level test would not break. But these changes have external impact on how the customer understands and uses this application. Assuming these changes are needed then we must drive them through tests. One "internal structure" change that could help is pulling this form out into a [react component](https://reactjs.org/docs/thinking-in-react.html#step-1-break-the-ui-into-a-component-hierarchy) so that we can drive these changes independently. Eventually `App.js` will have several components:
+We could just make these changes and this high-level test would not break. But these changes have an external impact on how the customer understands and uses this application. Assuming these changes are needed then we must drive them through tests. One "internal structure" change that could help is pulling this form out into a [react component](https://reactjs.org/docs/thinking-in-react.html#step-1-break-the-ui-into-a-component-hierarchy) so that we can drive these changes independently. Eventually `App.js` will have several components:
 
 ```js
 <div className="App">
@@ -295,7 +295,7 @@ Congratulations, you've successfully made an internal structural change "without
 
 ## NoteForm Test
 
-Now that we have a high-level Cypress test in place, let's move down the testing pyramid into a component test. This test will use the React Testing Library's [render](https://testing-library.com/docs/react-testing-library/cheatsheet/) function to render the `NoteForm` component and assert it's contents.
+Now that we have a high-level Cypress test in place, let's move down the testing pyramid into a component test. This test will use the React Testing Library's [render](https://testing-library.com/docs/react-testing-library/cheatsheet/) function to render the `NoteForm` component and assert its contents.
 
 Before we show this new form to our customer we need to test drive:
 
@@ -445,7 +445,7 @@ When the application is opened
 Then a note is listed
 ```
 
-These three user acceptance criteria will drive the need to actually save notes. While this can be achieved through component tests, let's add this to our high-level UI test. These tests are often called end-to-end tests because they follow a few paths through the application. These test are at the top of the testing pyramid because they tend to be slower and more brittle than tests lower in the pyramid. This translates into these tests tending to cost more to build, run and maintain. Consequently, we try to limit their number to only a few tests that follow typical paths through the system.
+These three user acceptance criteria will drive the need to actually save notes. While this can be achieved through component tests, let's add this to our high-level UI test. These tests are often called end-to-end tests because they follow a few paths through the application. These tests are at the top of the testing pyramid because they tend to be slower and more brittle than tests lower in the pyramid. This translates into these tests tending to cost more to build, run and maintain. Consequently, we try to limit their number to only a few tests that follow typical paths through the system.
 
 - Let's start with the first acceptance criteria. To achieve this we need to add an initial check, in `note.spec.cy.js`, to verify that no notes are listed prior to entering a note.
 
@@ -590,7 +590,7 @@ Using these variables and callback functions can be a bit overwhelming so we wil
 />
 ```
 
-- This is exactly the same as the name `onChange` function with the exception of the targe value's field name `'description'`.
+- This is exactly the same as the name `onChange` function with the exception of the target value's field name `'description'`.
 
 - Add an `onClick` attribute to the `note-form-submit` element
 
@@ -834,7 +834,7 @@ test("should display one note when one notes is provided", () => {
 
 - Write a test that verifies an exception is thrown when a list is not provided.
 
-This may seem unnecessary but it's important to test negative cases too. Tests not ony provide accountability and quick feedback loops for the [application under test](https://en.wikipedia.org/wiki/System_under_test) but it also provides [living documentation](https://en.wikipedia.org/wiki/Living_document) for new and existing team members.
+This may seem unnecessary but it's important to test negative cases too. Tests not only provide accountability and quick feedback loops for the [application under test](https://en.wikipedia.org/wiki/System_under_test) but it also provides [living documentation](https://en.wikipedia.org/wiki/Living_document) for new and existing team members.
 
 ```js
 test("should throw an exception the note array is undefined", () => {
@@ -945,7 +945,7 @@ You will notice that in the TDD testing cycle we commit very small bits of worki
 
 1. Our commit messages tell a focused, step-by-step story that explains why we made each change.
 1. We are preserving working code. ["Working software is the primary measure of progress."](https://agilemanifesto.org/principles.html)
-1. We can [revert](<https://en.wikipedia.org/wiki/Reversion_(software_development)>) our changes back to a know working state without loosing very many changes.
+1. We can [revert](<https://en.wikipedia.org/wiki/Reversion_(software_development)>) our changes back to a known working state without losing very many changes.
 
 This last benefit is worth expounding upon. The TDD testing cycle keeps us laser focused on writing small pieces of working functionality. In fact, the [3 Laws of TDD](http://blog.cleancoder.com/uncle-bob/2014/12/17/TheCyclesOfTDD.html) prevent us from writing more code than is necessary to satisfy a focused test.
 
@@ -990,7 +990,7 @@ test('should require name and description', () => {
 });
 ```
 
-- **When `...` is on a line by itself in a code example it means that I hav not provided all of the code from that file. Please be careful to copy each section that is separated by `...`'s and use them in the appropriate part of your files.**
+- **When `...` is on a line by itself, in a code example, it means that I have not provided all of the code from that file. Please be careful to copy each section that is separated by `...`'s and use them in the appropriate part of your files.**
 
 - This test checks to see if the jest [mock function](https://jestjs.io/docs/mock-functions) was called. In this test the note's name and description are blank so a new note should not be created and added to the list of notes.
 - We have a failing test.
@@ -1014,7 +1014,7 @@ function NoteForm(props) {
 ```
 
 - Green!
-- Rerun you Cypress tests.
+- Rerun your Cypress tests.
 - Commit!
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/d1e426596870c78f083c057ef88a7f50f5c6787b)
@@ -1057,7 +1057,7 @@ test("should add a new note when name and description are provided", () => {
 ```
 
 - All of these tests go green with no additional production code changes.
-- Rerun you Cypress tests.
+- Rerun your Cypress tests.
 - Commit!
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/959bafeba3080065bbaa161825d1371b739a3973)
@@ -1132,7 +1132,7 @@ function createNote() {
 ```
 
 - Green!
-- Cypress test is now Green!
+- The Cypress test is now Green!
 - Commit
 
 [Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/22b3132d0c71117111d82afc6f30f41d5ce93c00)
@@ -1207,7 +1207,7 @@ assert expected <input> to have value '', but the value was test note
 
 ## Saving Notes For Real
 
-React creates a [single page web application](https://en.wikipedia.org/wiki/Single-page_application). This means that the React state does not [persist](<https://en.wikipedia.org/wiki/Persistence_(computer_science)>) beyond a web page refresh. In other words, if you refresh your browser page you will loose all of notes you created.
+React creates a [single page web application](https://en.wikipedia.org/wiki/Single-page_application). This means that the React state does not [persist](<https://en.wikipedia.org/wiki/Persistence_(computer_science)>) beyond a web page refresh. In other words, if you refresh your browser page you will lose all of the notes you created.
 
 Since Cypress tests the application in a browser, this is the most logical place to test this user expectation.
 
@@ -1314,7 +1314,7 @@ function createNote() {
 }
 ```
 
-- Lastly make sure you clean up the persisted notes after the Cypress test is run.
+- Lastly, make sure you clean up the persisted notes after the Cypress test is run.
 
 ```js
 after(() => {
@@ -1410,7 +1410,7 @@ Please choose the profile you want to use: default
 
 - This command created the following files in your project
   - `amplify/` - This directory contains Amplify configuration files.
-  - `src/aws-exports.js` - This is file is ignored in [.gitignore](https://git-scm.com/docs/gitignore) and will not be committed to git or pushed up to GitHub. This file will contain AWS credentials and information that should not be shared publicly.
+  - `src/aws-exports.js` - This file is ignored in [.gitignore](https://git-scm.com/docs/gitignore) and will not be committed to git or pushed up to GitHub. This file will contain AWS credentials and information that should not be shared publicly.
 - This command created the following resources on AWS
   - UnauthRole AWS::IAM::Role
   - AuthRole AWS::IAM::Role
@@ -1544,7 +1544,7 @@ amplifytools.xcconfig
 cypress.env.json
 ```
 
-- Add the following set ups and tear downs to `cypress/integration/note.spec.cy.js`
+- Add the following setups and teardowns to `cypress/integration/note.spec.cy.js`
 
 ```js
 before(() => {
@@ -1745,7 +1745,7 @@ export default Footer;
 
 ## Backend API
 
-Now that we have user authentication hooked up, we need to add the ability for customer to get their "notes to show up on their mobile phone browser too". This means that we can't use local storage on the user's computer anymore. Instead we need to build a backend [API](https://en.wikipedia.org/wiki/API) that will store notes independently from the frontend code.
+Now that we have user authentication hooked up, we need to add the ability for customers to get their "notes to show up on their mobile phone browser too". This means that we can't use local storage on the user's computer anymore. Instead we need to build a backend [API](https://en.wikipedia.org/wiki/API) that will store notes independently from the frontend code.
 
 - Run `amplify add api` at the root of your project
 
@@ -1826,7 +1826,7 @@ async function createNote() {
 }
 ```
 
-- The final place that we need to remove `localforage` is in the `note.spec.cy.js` Cypress test. GraphQL does not provide an equivalent API endpoint to delete all of the notes so we will not be able to simply replace the `localforage.clear()` function call with a GraphQL one. In a separate commit we will added the ability to delete notes by `ID` through the UI. This is a [mutation](https://graphql.org/learn/queries/#mutations) that GraphQL provides. But for now we will just remove the clean up in the Cypress test.
+- The final place that we need to remove `localforage` is in the `note.spec.cy.js` Cypress test. GraphQL does not provide an equivalent API endpoint to delete all of the notes so we will not be able to simply replace the `localforage.clear()` function call with a GraphQL one. In a separate commit we will add the ability to delete notes by `ID` through the UI. This is a [mutation](https://graphql.org/learn/queries/#mutations) that GraphQL provides. But for now we will just remove the clean up in the Cypress test.
 
 ```js
 describe('Note Capture', () => {
@@ -2249,3 +2249,5 @@ Since we already built this application in React it seems reasonable that we wou
 To build this React Native App we will use the [Expo](https://expo.io) framework.  Expo simplifies the creation, testing and deployment of React Native applications.  The code and the tutorial for this second React Native App is available in the following repository: https://github.com/pairing4good/tdd-amplify-react-native.
 
 </details>
+
+
