@@ -302,6 +302,82 @@ Congratulations, you've successfully made an internal structural change "without
 
 <details>
   <summary>Linting Code</summary>
+  In addition to test automation, [linting](https://en.wikipedia.org/wiki/Lint_(software)) your code checks for stylistic consistency, programming errors, security vulnerabilities and common coding mistakes.  Even the best software developer misses coding issues once in a while.  Adding linting feedback to your code will prevent common mistakes and allow you to focus on solving business problems.
+
+  [ESLint](https://eslint.org/) is a pluggable linting utility for JavaScript and JSX.
+  - run `npm init @eslint/config`
+    - How would you like to use ESLint? · style
+    - What type of modules does your project use? · esm
+    - Which framework does your project use? · react
+    - Does your project use TypeScript? · No
+    - Where does your code run? · browser
+    - How would you like to define a style for your project? · guide
+    - Which style guide do you want to follow? · airbnb
+    - What format do you want your config file to be in? · JSON
+    - Would you like to install them now? · Yes
+    - Which package manager do you want to use? · npm
+
+  ### Set Up Linting Rules
+  -  run `npm install eslint-config-prettier eslint-plugin-prettier prettier --save-dev`
+  -  run `npm install eslint-plugin-promise --save-dev`
+  -  run `npm install eslint-plugin-jest --save-dev`
+  -  run `npm install eslint-plugin-react-hooks --save-dev`
+  -  run `npm i eslint-plugin-cypress --save-dev`
+
+Add the following to the `.eslintrc.json` file at the root of the repository
+```json
+{
+    ...
+    "extends": [
+        "plugin:react/recommended",
+        "airbnb",
+        "plugin:prettier/recommended",
+        "plugin:promise/recommended",
+        "plugin:jest/recommended",
+        "plugin:react-hooks/recommended",
+        "plugin:cypress/recommended"
+    ],
+    ...
+    "plugins": [
+        "react", "prettier", "promise", "jest", "react-hooks", "cypress"
+    ],
+    "rules": {
+        "react/react-in-jsx-scope": "off",
+        "react/jsx-filename-extension": "off"
+    }
+}
+```
+At the bottom of the `.eslintrc.json` file `"react/react-in-jsx-scope": "off"` is added to the `rules` section. This linting rule was disabled because it is no longer accurate starting in [React v17](https://reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html).
+
+Add the following scripts to the `package.json` file in the `scripts` section.
+
+```js
+"scripts": {
+    ...
+    "cypress:open": "cypress open",
+    "lint": "eslint . --ext js,jsx",
+    "lint:fix": "eslint . --ext js,jsx --fix"
+  }
+```
+
+Run `npm run lint:fix`
+
+To run [ESLint](https://eslint.org/) run the command `npm run lint`. [ESLint](https://eslint.org/) can automatically fix problems by running `npm run lint:fix`.
+
+If you are using [VSCode](https://code.visualstudio.com/) adding the ESLint (dbaeumer.vscode-eslint) plugin provides live feedback as you are writing code.  Faster feedback loops help team members learn team style guidelines faster and avoid delays while committing.
+
+  ### Prevent Committing Credentials
+  - run `npm install secretlint @secretlint/secretlint-rule-preset-recommend --save-dev`
+  - run `npx secretlint --init`
+
+Add the following script to the `package.json` file in the `scripts` section.
+```js
+"scripts": {
+    ...
+    "lint:fix": "eslint . --ext js,jsx --fix",
+    "secretlint": "npx secretlint '**/*'"
+  }
+```
   
 </details>
 
