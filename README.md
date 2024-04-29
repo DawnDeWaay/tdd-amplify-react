@@ -51,6 +51,8 @@ Then a list of two notes are displayed
 
 The user story and acceptance criteria above describe a desired customer outcome. The user acceptance test will link this narrative with a high level how. For this tutorial our first application will be a [web application](https://en.wikipedia.org/wiki/Web_application) in [React](https://reactjs.org). The testing framework we will use to test this will be [Cypress](https://www.cypress.io)
 
+#### Setting up React Project
+
 - In a terminal window `cd` to the location where you store your git repositories.
 - Run `npm create vite@latest` to create a new react app using vite
 - Press `y` to proceed if needed
@@ -60,6 +62,29 @@ The user story and acceptance criteria above describe a desired customer outcome
 - Run `cd [Project name]`
 - Run `npm i`, meaning Install, this will install all dependencies locally that the project, specified in the "package.json" file
 - Run `npm run dev` to start your local server
+
+#### Removing Boilerplate Vite code
+
+- Delete the following files to start with a blank slate:
+  - `public/vite.svg`
+  - The contents of `src/App.css`
+  - The contents of App.jsx, should look like this:
+
+  ```js
+  import './App.css'
+
+  function App() {
+    return (
+      <>
+      </>
+    )
+  }
+
+  export default App
+
+  ```
+
+
 - Open a second terminal session within VS Code by selecting `Terminal < New Terminal` again
 - Run `npm install cypress --save-dev` to install Cypress via npm
 - Run `npx cypress open` to open the Cypress menu
@@ -122,25 +147,7 @@ Timed out retrying after 4000ms: Expected to find element: [data-testid=note-nam
 
 - Our objective now is to make this test go green (pass) in as few steps as possible. The goal is not to build a perfectly designed application but rather to make this go green and then [refactor](https://en.wikipedia.org/wiki/Code_refactoring) the architecture through small incremental steps.
 
-### Failing Test
-
-When you ran `npx create-react-app tdd-amplify-react` it created the react app and added a test that renders the `App` [component](https://reactjs.org/docs/thinking-in-react.html#step-1-break-the-ui-into-a-component-hierarchy) and verifies that it has a "learn react" link. This test is lower in the testing pyramid because it doesn't start up the web application. Instead it uses the [React Testing Library](https://testing-library.com) to render the component hierarchy without starting the web application on http://localhost:3000. I would normally never encourage someone to delete a test but since we didn't write this test and we are starting at the top of the testing pyramid, let's just delete `App.test.js` for now.
-
 ### Green - Acceptance Test
-
-Before we proceed let's add a script to run cypress into the `package.json` file in the `scripts` section.
-
-```js
-"scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "cypress:open": "cypress open"
-  }
-```
-
-- Now you can run `npm run cypress:open` to open cypress
 
 The first step to making this failing test go green is adding an element with one of the `data-testid`'s to the `src/App.js` file.
 
