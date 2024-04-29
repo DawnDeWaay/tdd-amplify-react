@@ -22,9 +22,7 @@ There are a few benefits of starting at the top of the testing pyramid:
   
 - Download and install [Visual Studio Code](https://code.visualstudio.com/)
 - Open VS Code and set up the ability to [launch VS Code from the terminal](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line) 
-- Install [Node Version Manager](https://github.com/nvm-sh/nvm). `nvm` allows you to quickly install and use different versions of node via the command line.
-- Run `nvm install node` to install the latest version of node
-- Run `nvm use node` to use the latest version of node
+- Install [Node Package Manager](https://nodejs.org/en). `npm` allows you to quickly install and manage JavaScript libraries/dependencies
   
 </details>
 
@@ -53,36 +51,40 @@ Then a list of two notes are displayed
 
 The user story and acceptance criteria above describe a desired customer outcome. The user acceptance test will link this narrative with a high level how. For this tutorial our first application will be a [web application](https://en.wikipedia.org/wiki/Web_application) in [React](https://reactjs.org). The testing framework we will use to test this will be [Cypress](https://www.cypress.io)
 
-- In a terminal window `cd` to the location where you store your git repositories.  I like to store mine under `~/git`.
-- Run `npx create-react-app tdd-amplify-react` to create a new react app
-- `cd` into `tdd-amplify-react`
-- Run `code .` to open the directory in VS Code
-- Open a new terminal within VS Code by selecting `Terminal < New Terminal`
-- In the new terminal session run `npm start` to start the new react app                   
+- In a terminal window `cd` to the location where you store your git repositories.
+- Run `npm create vite@latest` to create a new react app using vite
+- Press `y` to proceed if needed
+- Choose a project name
+- Select `React` framework
+- Select `JavaScript` variant
+- Run `cd [Project name]`
+- Run `npm i`, meaning Install, this will install all dependencies locally that the project, specified in the "package.json" file
+- Run `npm run dev` to start your local server
 - Open a second terminal session within VS Code by selecting `Terminal < New Terminal` again
-- In this second terminal session run `npm install cypress --save-dev` to install Cypress via [npm](https://www.npmjs.com)
-- Run `npx cypress open` to Open Cypress
+- Run `npm install cypress --save-dev` to install Cypress via npm
+- Run `npx cypress open` to open the Cypress menu
 - Select `E2E Testing` within the Cypress window
-- Click `Continue` at the bottom of the page
-- Click on your preferred browser for E2E testing
-- Click `Start E2E Testing in [Your Preferred Browser]`
-- Configure the base url in the `cypress.config.js` file at the root of your repository
+- Configure your `cypress.config.js` file to match this:
 
 ```js
 const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
   e2e: {
-    baseUrl: 'http://localhost:3000',
+    baseUrl: "http://localhost:5173",
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
   },
 });
 ```
+
+- Click `Continue` at the bottom of the page
+- Click on your preferred browser for E2E testing
+- Click `Start E2E Testing in [Your Preferred Browser]`
 - Click `Create new empty spec` in the Cypress window
 - Create a new test named `cypress/e2e/note.cy.js`
-- Open the `cypress/e2e/note.cy.js` file
+- Open the `cypress/e2e/note.cy.js` file in VS Code
 - Write your first test with intent revealing names.
 
 ```js
@@ -119,8 +121,6 @@ Timed out retrying after 4000ms: Expected to find element: [data-testid=note-nam
 ```
 
 - Our objective now is to make this test go green (pass) in as few steps as possible. The goal is not to build a perfectly designed application but rather to make this go green and then [refactor](https://en.wikipedia.org/wiki/Code_refactoring) the architecture through small incremental steps.
-
-[Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/998cf7a3da2af3b30aed14ccea18e6d546e85e61)
 
 ### Failing Test
 
@@ -326,6 +326,7 @@ test("should display a create note button", () => {});
 - The test name should be conversational and intent revealing. It should avoid technical words like "render", "component", and the like. We want a new team member to be able to read this test and understand the customer value. The body of the test will provide the technical HOW but the test name should point to the customer's WHY and WHAT.
 
 - Now we will add a test that renders the component and asserts that the button is labeled "Create Note". For more information on the React Testing Library visit https://testing-library.com/docs
+
 ```js
 import { render, screen } from "@testing-library/react";
 import NoteForm from "../NoteForm";
@@ -971,7 +972,7 @@ These tight feedback loops help software developers avoid going down rabbit hole
 
 ### Form Validation
 
-Let's assume that the note name and description are both required fields. While you want the customer driving decisions about your product, one way to gather customer feedback is to launch-and-learn. Your customers will tell you if they don't like your decision.  As software developers we must be obsessed with our customers. Set up a regular cadence to meet with your customers and demonstrate a working application. Make space for them to let you know what they think.
+Let's assume that the note name and description are both required fields. While you want the customer driving decisions about your product, one way to gather customer feedback is to launch-and-learn. Your customers will tell you if they don't like your decision. As software developers we must be obsessed with our customers. Set up a regular cadence to meet with your customers and demonstrate a working application. Make space for them to let you know what they think.
 
 In order to test drive validation we need to determine where in the testing pyramid to write this test. Remember that the highest-level tests are slow and expensive, so limit these tests to between 3 to 5 tests that walk through the most common user experiences. In order to adequately test all of the combinations of good and bad fields this is not well suited for UI testing.
 
@@ -2131,6 +2132,7 @@ ReactDOM.render(
 - Remove all of the contents of `App.css` because it will no longer be used in the application.
 
 - Add a Bootstrap React [Grid System](https://react-bootstrap.github.io/layout/grid) to `App.js`
+
 ```js
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -2147,9 +2149,9 @@ return (
   </Row>
   <Row>
     <Col  md={6}>
-    <NoteForm notes={notes}  
-      formData={formData} 
-      setFormDataCallback={setFormData} 
+    <NoteForm notes={notes}
+      formData={formData}
+      setFormDataCallback={setFormData}
       createNoteCallback={createNote}/>
     </Col>
   </Row>
@@ -2169,6 +2171,7 @@ return (
 ```
 
 - Add a Bootstrap React [Form](https://react-bootstrap.github.io/components/forms) to `NoteForm.js`
+
 ```js
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -2178,19 +2181,19 @@ import Form from 'react-bootstrap/Form';
 return (
     <Form>
         <Form.Group>
-            <Form.Control data-testid="note-name-field" 
-                onChange={e => props.setFormDataCallback({ 
-                    ...props.formData, 
+            <Form.Control data-testid="note-name-field"
+                onChange={e => props.setFormDataCallback({
+                    ...props.formData,
                     'name': e.target.value}
                 )}
                 value={props.formData.name}
                 placeholder="Note Name"/>
         </Form.Group>
         <Form.Group>
-            <Form.Control data-testid="note-description-field" 
-                as="textarea" 
-                onChange={e => props.setFormDataCallback({ 
-                    ...props.formData, 
+            <Form.Control data-testid="note-description-field"
+                as="textarea"
+                onChange={e => props.setFormDataCallback({
+                    ...props.formData,
                     'description': e.target.value}
                 )}
                 value={props.formData.description}
@@ -2201,12 +2204,13 @@ return (
                 onClick={createNote}>
                 Create Note
             </Button>
-        </Form.Group> 
-    </Form> 
+        </Form.Group>
+    </Form>
 );
 ```
 
 - Add a Bootstrap React [Card](https://react-bootstrap.github.io/components/cards) to `NoteList.js`
+
 ```js
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card'
@@ -2224,7 +2228,7 @@ return (
                   <Card.Text data-testid={"test-description-" + index}>
                     {note.description}
                   </Card.Text>
-                  <Button variant="secondary" 
+                  <Button variant="secondary"
                     data-testid={'test-button-' + index}
                     onClick={() => props.deleteNoteCallback(note.id)}>
                       Delete note
@@ -2234,7 +2238,7 @@ return (
               <br />
             </div>
         ))
-    } 
+    }
   </div>
 );
 ```
@@ -2252,12 +2256,11 @@ return (
   <summary>Mobile App: Part 2</summary>
 
 ## Mobile App: Part 2
-Modern applications are available through the web, mobile apps, Alexa, and so much more.  Our customer wants a [native](https://en.wikipedia.org/wiki/Mobile_app#Native_app) mobile Notes application.  While my first response was, "why?", they insisted on creating a native mobile app instead of just relying on the mobile-friendly web app that we created using Bootstrap.  In order to build native apps you have a couple choices.  First you can build an application for each mobile operating system: [iOS](https://en.wikipedia.org/wiki/IOS), [Android](https://en.wikipedia.org/wiki/Android_(operating_system)).  If you went down this path you would need to write the iOS application in [Swift](https://en.wikipedia.org/wiki/Swift_(programming_language)) or [Objective-C](https://en.wikipedia.org/wiki/Objective-C).  For Android you would need to write the application in [Java](https://en.wikipedia.org/wiki/Java_(programming_language)).  This is a sensible investment if these native applications need to be highly performant or utilize specific low-level device functionality like iOS's [Face ID](https://en.wikipedia.org/wiki/Face_ID).  In the case of our Notes App none of this applies.  Instead, we should use a code-once deploy everywhere solution like [React Native](https://reactnative.dev/) or [Xamarin](https://dotnet.microsoft.com/apps/xamarin).  These frameworks allow you to code once, in a single language, and deploy separate apps for each mobile operating system.
 
-Since we already built this application in React it seems reasonable that we would build the mobile native application in React Native.  While they are different frameworks they use a similar approach and have similar syntax which makes it easier to learn and support.  As for the AWS backend we want to reuse the same Amplify backend for all of the applications: web, iOS, Android, etc.  The reuse of a single backend service is enabled through a [Service-Oriented Architecture](https://en.wikipedia.org/wiki/Service-oriented_architecture).  While each frontend might be different we want the backend logic to be the same.  The backend logic is where our business makes money, so we need to keep it safe, performant and bug free.  This is much easier when our backend logic is not duplicated for every frontend application.
+Modern applications are available through the web, mobile apps, Alexa, and so much more. Our customer wants a [native](https://en.wikipedia.org/wiki/Mobile_app#Native_app) mobile Notes application. While my first response was, "why?", they insisted on creating a native mobile app instead of just relying on the mobile-friendly web app that we created using Bootstrap. In order to build native apps you have a couple choices. First you can build an application for each mobile operating system: [iOS](https://en.wikipedia.org/wiki/IOS), [Android](<https://en.wikipedia.org/wiki/Android_(operating_system)>). If you went down this path you would need to write the iOS application in [Swift](<https://en.wikipedia.org/wiki/Swift_(programming_language)>) or [Objective-C](https://en.wikipedia.org/wiki/Objective-C). For Android you would need to write the application in [Java](<https://en.wikipedia.org/wiki/Java_(programming_language)>). This is a sensible investment if these native applications need to be highly performant or utilize specific low-level device functionality like iOS's [Face ID](https://en.wikipedia.org/wiki/Face_ID). In the case of our Notes App none of this applies. Instead, we should use a code-once deploy everywhere solution like [React Native](https://reactnative.dev/) or [Xamarin](https://dotnet.microsoft.com/apps/xamarin). These frameworks allow you to code once, in a single language, and deploy separate apps for each mobile operating system.
 
-To build this React Native App we will use the [Expo](https://expo.io) framework.  Expo simplifies the creation, testing and deployment of React Native applications.  The code and the tutorial for this second React Native App is available in the following repository: https://github.com/pairing4good/tdd-amplify-react-native.
+Since we already built this application in React it seems reasonable that we would build the mobile native application in React Native. While they are different frameworks they use a similar approach and have similar syntax which makes it easier to learn and support. As for the AWS backend we want to reuse the same Amplify backend for all of the applications: web, iOS, Android, etc. The reuse of a single backend service is enabled through a [Service-Oriented Architecture](https://en.wikipedia.org/wiki/Service-oriented_architecture). While each frontend might be different we want the backend logic to be the same. The backend logic is where our business makes money, so we need to keep it safe, performant and bug free. This is much easier when our backend logic is not duplicated for every frontend application.
+
+To build this React Native App we will use the [Expo](https://expo.io) framework. Expo simplifies the creation, testing and deployment of React Native applications. The code and the tutorial for this second React Native App is available in the following repository: https://github.com/pairing4good/tdd-amplify-react-native.
 
 </details>
-
-
