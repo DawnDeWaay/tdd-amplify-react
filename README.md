@@ -51,7 +51,7 @@ Then a list of two notes are displayed
 
 The user story and acceptance criteria above describe a desired customer outcome. The user acceptance test will link this narrative with a high level how. For this tutorial our first application will be a [web application](https://en.wikipedia.org/wiki/Web_application) in [React](https://reactjs.org). The testing framework we will use to test this will be [Cypress](https://www.cypress.io)
 
-#### Setting up React Project
+#### Setting Up React Project
 
 - In a terminal window `cd` to the location where you store your git repositories.
 - Run `npm create vite@latest` to create a new react app using vite
@@ -66,24 +66,23 @@ The user story and acceptance criteria above describe a desired customer outcome
 #### Removing Boilerplate Vite code
 
 - Delete the following files to start with a blank slate:
+
   - `public/vite.svg`
   - The contents of `src/App.css`
-  - The contents of App.jsx, should look like this:
+  - The contents of `src/index.css`
+  - The imports and return statement of App.jsx, it should look like this:
 
   ```js
-  import './App.css'
+  import "./App.css";
 
   function App() {
-    return (
-      <>
-      </>
-    )
+    return <></>;
   }
 
-  export default App
-
+  export default App;
   ```
 
+#### Setting Up Cypress
 
 - Open a second terminal session within VS Code by selecting `Terminal < New Terminal` again
 - Run `npm install cypress --save-dev` to install Cypress via npm
