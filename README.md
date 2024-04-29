@@ -70,14 +70,15 @@ The user story and acceptance criteria above describe a desired customer outcome
   - `public/vite.svg`
   - The contents of `src/App.css`
   - The contents of `src/index.css`
-  - The imports and return statement of App.jsx, it should look like this:
+  - `src/assets` folder
+  - Configure App.jsx to match this:
 
   ```js
   import "./App.css";
 
-  function App() {
+  const App = () => {
     return <></>;
-  }
+  };
 
   export default App;
   ```
@@ -148,18 +149,18 @@ Timed out retrying after 4000ms: Expected to find element: [data-testid=note-nam
 
 ### Green - Acceptance Test
 
-The first step to making this failing test go green is adding an element with one of the `data-testid`'s to the `src/App.js` file.
+The first step to making this failing test go green is adding an element with one of the `data-testid`'s to the `src/App.jsx` file.
 
 ```js
 import "./App.css";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
+    <>
       <input data-testid="note-name-field" />
-    </div>
+    </>
   );
-}
+};
 
 export default App;
 ```
@@ -170,7 +171,7 @@ export default App;
 Timed out retrying after 4000ms: Expected to find element: [data-testid=note-description-field], but never found it.
 ```
 
-- Add the next `input` field and rerun the test
+- Add the next `input` element with `data-testid="note-description-field"` and rerun the test
 - Now the Cypress test fails on the submit button
 
 ```
@@ -211,17 +212,17 @@ Timed out retrying after 4000ms: Expected to find element: [data-testid=test-des
 ```js
 import "./App.css";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
+    <>
       <input data-testid="note-name-field" />
       <input data-testid="note-description-field" />
       <button data-testid="note-form-submit" />
       <p data-testid="test-name-0">test note</p>
       <p data-testid="test-description-0">test note description</p>
-    </div>
+    </>
   );
-}
+};
 
 export default App;
 ```
@@ -229,8 +230,6 @@ export default App;
 - While this is far from a useful application, this application can be:
   1. refactored on green
   1. used to get feedback from the customer
-
-[Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/62108fdcb9f7a1a1f5d76b005f05460a149a6535)
 
 ### Refactor - Acceptance Test
 
@@ -256,29 +255,38 @@ We could just make these changes and this high-level test would not break. But t
 
 So let's pull out a `NoteForm` component.
 
-- Create a new file called `NoteForm.js` in the `src` directory
+- Create a new file called `NoteForm.jsx` in the `src` directory
 
 ```js
-function NoteForm(props) {
-  return <div>//your form goes here</div>;
-}
+const NoteForm = (props) => {
+  return (
+    <div>
+      // Content goes here
+    </div>;
+)};
 
 export default NoteForm;
 ```
 
-- This is a [React functional component](https://reactjs.org/docs/components-and-props.html#function-and-class-components)
+- This is a [React component](https://react.dev/learn/your-first-component)
 - The `export default` is the way to [export](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export) only one object in [ES6](https://en.wikipedia.org/wiki/ECMAScript)
 
 - Copy the form from `App.js` and paste it into the `div` in `NoteForm.js`
 
 ```js
-<div>
-  <input data-testid="note-name-field" />
-  <input data-testid="note-description-field" />
-  <button data-testid="note-form-submit" />
-  <p data-testid="test-name-0">test note</p>
-  <p data-testid="test-description-0">test note description</p>
-</div>
+const NoteForm = (props) => {
+  return (
+    <div>
+      <input data-testid="note-name-field" />
+      <input data-testid="note-description-field" />
+      <button data-testid="note-form-submit" />
+      <p data-testid="test-name-0">test note</p>
+      <p data-testid="test-description-0">test note description</p>
+    </div>
+  );
+};
+
+export default NoteForm;
 ```
 
 - Replace the form contents in `App.js` with `<NoteForm />` and add an import for the `NoteForm`
@@ -302,8 +310,6 @@ export default App;
 
 Congratulations, you've successfully made an internal structural change "without changing its external behavior" (Refactoring).
 
-[Code for this section](https://github.com/pairing4good/tdd-amplify-react/commit/e6e28ce004ba0b29e2b0b7bd13adcc67965c1cfa)
-
 </details>
 
 <details>
@@ -318,10 +324,8 @@ Before we show this new form to our customer we need to test drive:
 - the button's name
 - helpful input descriptions
 
-- First create a `test` directory in the `src` directory
-- Create a file called `NoteForm.test.js` in the new `test` directory
-
-### Button Test
+- First create a `test` folder in the `src` directory
+- Create a file called `NoteForm.test.js` in the new `test` folder
 
 - In this new test file add a test that will drive the button name
 
